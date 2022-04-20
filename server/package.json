@@ -1,0 +1,26 @@
+{
+  "name": "ttads-tp-backend-2022",
+  "version": "1.0.0",
+  "description": "TP Backend para materia TTADS 2022 - UTN FRRo",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nicolasf96/ttads-tp-backend-2022.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicolasf96/ttads-tp-backend-2022/issues"
+  },
+  "homepage": "https://github.com/nicolasf96/ttads-tp-backend-2022#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "mongoose": "^6.3.0",
+    "path": "^0.12.7"
+  }
+}
