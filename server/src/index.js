@@ -5,6 +5,7 @@ import Morgan from 'morgan'
 //import Helmet from 'helmet'
 //import RateLimit from 'express-rate-limit'
 import routerUser from './routes/user.routes.js'
+import routerCategory from './routes/categories.routes.js'
 
 const app = Express();
 // connect to db
@@ -22,7 +23,10 @@ app.use(Cors()) // Enable All CORS Requests
 app.use(Morgan('tiny')) // request logger
 app.use(Express.json()) // JSON parsing (body-parser replacement)
 
+
 app.use('/api/users', routerUser);
+app.use('/api/categories', routerCategory);
+
 
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`listening on port ${port}`))
