@@ -1,5 +1,28 @@
-require('./database');
-const app = require('./app');
+import Express from 'express'
+import Mongoose from 'mongoose'
+import Cors from 'cors'
+import Morgan from 'morgan'
+//import Helmet from 'helmet'
+//import RateLimit from 'express-rate-limit'
+import routerUser from './routes/user.routes.js'
 
-app.listen(app.get('port'));
-console.log('server on port',app.get('port'))
+const app = Express();
+// connect to db
+Mongoose.connect("mongodb://localhost/ttads-tp-backend-2022", {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+}).then(db => console.log('Db is connected'))
+  .catch(err => console.log('Error '));
+
+
+     
+// prebuild middlewares
+app.use(Cors()) // Enable All CORS Requests
+//app.use(Helmet()) // For securing http request headers (later on)
+app.use(Morgan('tiny')) // request logger
+app.use(Express.json()) // JSON parsing (body-parser replacement)
+
+app.use('/api/users', routerUser);
+
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log(`listening on port ${port}`))
