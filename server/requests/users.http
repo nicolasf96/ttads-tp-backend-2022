@@ -1,0 +1,33 @@
+GET http://localhost:3000/api/users/
+
+###
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "email": "jorgepos@hamgilsdfasdf",
+    "username": "sadfsdaf",
+    "password": "dffdsdf",
+    "firstname": "sdf",
+    "lastname": "Chip",
+    "birthDate": "",
+    "phone": "11125253254"
+}
+
+
+###
+GET http://localhost:3000/api/users/62a3b128ef5f61a7ca382897
+
+###
+PUT http://localhost:3000/api/users/62a3b128ef5f61a7ca382897
+Content-Type: application/json
+
+{
+    "email": "chips@gmail.com",
+    "username": "potatochip1"
+}
+
+
+
+
+
