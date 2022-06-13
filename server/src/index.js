@@ -8,6 +8,7 @@ import routerUser from './routes/user.routes.js'
 import routerCategory from './routes/categories.routes.js'
 import routerStore from './routes/stores.routes.js'
 import routerReview from './routes/reviews.routes.js'
+import routerProduct from './routes/products.routes.js'
 
 const app = Express();
 // connect to db
@@ -30,6 +31,7 @@ app.use('/api/users', routerUser);
 app.use('/api/categories', routerCategory);
 app.use('/api/stores', routerStore);
 app.use('/api/reviews', routerReview);
+app.use('/api', routerProduct);
 
 
 const port = process.env.PORT || 3000

@@ -1,0 +1,33 @@
+GET http://localhost:3000/api/products/
+
+###
+POST http://localhost:3000/api/products/62a750be4635495c180e406e
+Content-Type: application/json
+
+{
+    "title": "Lasagna ",
+    "description": "Italian Food",
+    "price": 42.35
+}
+
+
+###    OBTENER 1 PRODUCTO SEGUN ID
+GET http://localhost:3000/api/product/62a7af4ab10d7efe9d54276e
+
+
+###     OBTENER TODOS LOS PRODUCTOS SEGUN EL ID DEL STORE
+GET http://localhost:3000/api/products/62a750be4635495c180e406e
+
+###
+PUT http://localhost:3000/api/products/62a7b128629c96b4a4d14ccb
+Content-Type: application/json
+
+{
+    "title": "The Argento 'Choripan'"
+
+}
+
+
+###
+DELETE http://localhost:3000/api/products/62a7b2276163ee873842897c
+

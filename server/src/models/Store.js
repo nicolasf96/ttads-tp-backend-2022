@@ -10,7 +10,8 @@ let storeSchema = new Schema({
     isService: Boolean,
     valoration: Number,
     idCategory: String,
-    idUser: String
+    idUser: String,
+    products:[{type: Schema.Types.ObjectId, ref: 'Product'}]
     
 },{
     timestamps: true,

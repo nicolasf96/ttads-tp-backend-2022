@@ -5,7 +5,7 @@ import Store from '../models/Store.js'
 // curl http://localhost:3000/api/v1/stores/
 //getAll
 storeController.getStores = async (req, res) => {
-    let stores = await Store.find();
+    let stores = await Store.find().populate('products');
     return res.status(200).json({
         success: true,
         data: stores,
