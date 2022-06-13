@@ -16,9 +16,9 @@ GET http://localhost:3000/api/categories/62a3ba15b95f6344b83e7caf
 
 
 ###
-PUT http://localhost:3000/api/users/62a3ba15b95f6344b83e7caf
+PUT http://localhost:3000/api/categories/62a3ba15b95f6344b83e7caf
 Content-Type: application/json
 
 {
-    "description": "Bares"
+    "description": "Gastronomía"
 }

@@ -40,7 +40,7 @@ categoryController.createCategory = async (req, res) => {
 
 
 categoryController.editCategory = async (req,res) => {
-    const theCategory = await Category.findByIdAndUpdate(req.params.id, req.params.body);
+    const theCategory = await Category.findByIdAndUpdate(req.params.id, req.body);
     return res.status(200).json({
         success: true,
         data: theCategory,

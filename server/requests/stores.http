@@ -19,17 +19,18 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:3000/api/stores/62a74ada859effbc2c16eaae
+GET http://localhost:3000/api/stores/62a750be4635495c180e406e
 
 ###
-PUT http://localhost:3000/api/stores/62a74ada859effbc2c16eaae
+PUT http://localhost:3000/api/stores/62a750be4635495c180e406e
 Content-Type: application/json
 
 {
     "name": "The Vegan Soap"
+
 }
 
 
-
-
+###
+DELETE http://localhost:3000/api/stores/62a750972471a77fc821f564
 

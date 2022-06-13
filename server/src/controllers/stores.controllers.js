@@ -40,13 +40,13 @@ storeController.createStore = async (req, res) => {
 
 
 storeController.editStore = async (req,res) => {
-    const theStore = await Store.findByIdAndUpdate(req.params.id, req.params.body);
+    let theStore = await Store.findByIdAndUpdate(req.params.id, req.body);
     return res.status(200).json({
         success: true,
-        data: theStore,
+        data: req.params.body,
         message: 'Store edited successfully',
     })
-}
+};
 
 
 //curl -X DELETE http://localhost:3000/api/v1/store/<id>

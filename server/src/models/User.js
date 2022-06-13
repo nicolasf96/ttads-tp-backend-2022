@@ -3,7 +3,11 @@ const {Schema,model} =Mongoose;
 
 let userSchema = new Schema({
     email: String,
-    username:String,
+    username: {
+        type: String,
+        unique: true,
+        required: true
+    },
     password: String,
     firstName: String,
     lastName: String,

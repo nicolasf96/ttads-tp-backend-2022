@@ -1,0 +1,25 @@
+###
+GET http://localhost:3000/api/reviews/
+
+###
+POST http://localhost:3000/api/reviews
+Content-Type: application/json
+
+{
+    "idStore": "62a750be4635495c180e406e",
+    "comment": "La verdad muy buena la comida 😀",
+    "score": "3"
+}
+
+
+###
+GET http://localhost:3000/api/reviews/62a7941a7fd2e196ec14e16d
+
+
+###
+PUT http://localhost:3000/api/reviews/62a7941a7fd2e196ec14e16d
+Content-Type: application/json
+
+{
+    "comment": "Buenarda la comida vegana 😀"
+}

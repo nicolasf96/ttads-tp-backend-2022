@@ -40,7 +40,7 @@ userController.createUser = async (req, res) => {
 
 
 userController.editUser = async (req,res) => {
-    const theUser = await User.findByIdAndUpdate(req.params.id, req.params.body);
+    const theUser = await User.findByIdAndUpdate(req.params.id, req.body);
     return res.status(200).json({
         success: true,
         data: theUser,
