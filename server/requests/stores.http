@@ -1,0 +1,35 @@
+GET http://localhost:3000/api/stores/
+
+###
+POST http://localhost:3000/api/stores
+Content-Type: application/json
+
+{
+    "name": "Vegan Soap",
+    "username": "thevegansoap",
+    "description": "El mejor Restaurante Vegano de NY",
+    "address": "ny st. 245",
+    "city": "Manhattan",
+    "isService": false,
+    "valoration": 4.3,
+    "idCategory": "62a3ba15b95f6344b83e7caf",
+    "idUser": "62a3b128ef5f61a7ca382897"
+
+}
+
+
+###
+GET http://localhost:3000/api/stores/62a74ada859effbc2c16eaae
+
+###
+PUT http://localhost:3000/api/stores/62a74ada859effbc2c16eaae
+Content-Type: application/json
+
+{
+    "name": "The Vegan Soap"
+}
+
+
+
+
+

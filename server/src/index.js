@@ -6,6 +6,7 @@ import Morgan from 'morgan'
 //import RateLimit from 'express-rate-limit'
 import routerUser from './routes/user.routes.js'
 import routerCategory from './routes/categories.routes.js'
+import routerStore from './routes/stores.routes.js'
 
 const app = Express();
 // connect to db
@@ -26,6 +27,7 @@ app.use(Express.json()) // JSON parsing (body-parser replacement)
 
 app.use('/api/users', routerUser);
 app.use('/api/categories', routerCategory);
+app.use('/api/stores', routerStore);
 
 
 const port = process.env.PORT || 3000
