@@ -5,7 +5,7 @@ import Category from '../models/Category.js'
 // curl http://localhost:3000/api/v1/Category/
 //getAll
 categoryController.getCategories = async (req, res) => {
-    let categories = await Category.find();
+    let categories = await Category.find().populate('idCategoryParent');
     return res.status(200).json({
         success: true,
         data: categories,
@@ -51,6 +51,11 @@ categoryController.editCategory = async (req,res) => {
 
 //curl -X DELETE http://localhost:3000/api/v1/client/<id>
 categoryController.deleteCategory =  async (req, res) => {
+    let catChilds = await Category.find({"idCategoryParent":req.params.id}).exec();
+    await catChilds.map(function(cats) {
+        Category.deleteOne({"_id": cats._id})
+        console.log(cats);
+    });
     await Category.deleteOne({"_id": req.params.id});
     return res.status(200).json({
         success: true,

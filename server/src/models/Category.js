@@ -3,7 +3,7 @@ const {Schema,model} =Mongoose;
 
 let categorySchema = new Schema({
     description: String,
-    idCategoryParent: String,
+    idCategoryParent: {type: Schema.Types.ObjectId, ref: 'Category'},
     icon: String
 },{
     timestamps: true,

@@ -4,6 +4,9 @@ import Cors from 'cors'
 import Morgan from 'morgan'
 //import Helmet from 'helmet'
 //import RateLimit from 'express-rate-limit'
+
+import dbconnection from './database.js';
+
 import routerUser from './routes/user.routes.js'
 import routerCategory from './routes/categories.routes.js'
 import routerStore from './routes/stores.routes.js'
@@ -11,13 +14,6 @@ import routerReview from './routes/reviews.routes.js'
 import routerProduct from './routes/products.routes.js'
 
 const app = Express();
-// connect to db
-Mongoose.connect("mongodb://localhost/ttads-tp-backend-2022", {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-}).then(db => console.log('Db is connected'))
-  .catch(err => console.log('Error '));
-
 
      
 // prebuild middlewares
