@@ -5,15 +5,15 @@ POST http://localhost:3000/api/stores
 Content-Type: application/json
 
 {
-    "name": "Vegan Soap",
-    "username": "thevegansoap",
-    "description": "El mejor Restaurante Vegano de NY",
-    "address": "ny st. 245",
-    "city": "Manhattan",
+    "name": "Malibu",
+    "username": "sadfasdfasdf",
+    "description": "gdfsgsdfgni",
+    "address": "Chacabufdsgsdfg9",
+    "city": "Rufino",
     "isService": false,
-    "valoration": 4.3,
-    "idCategory": "62a3ba15b95f6344b83e7caf",
-    "idUser": "62a3b128ef5f61a7ca382897"
+    "valoration": 5.0,
+    "idCategory": "62b3a9171c3ecb4df2fbd673",
+    "user": "62b3a9b71c3ecb4df2fbd67b"
 
 }
 

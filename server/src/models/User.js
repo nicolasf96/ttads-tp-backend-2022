@@ -11,7 +11,8 @@ let userSchema = new Schema({
     password: String,
     firstName: String,
     lastName: String,
-    phone: String
+    phone: String,
+    stores:[{type: Schema.Types.ObjectId, ref: 'Store'}]
     
 },{
     timestamps: true,

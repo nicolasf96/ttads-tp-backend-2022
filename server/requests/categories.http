@@ -6,8 +6,7 @@ POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "description": "Smartphones",
-    "idCategoryParent": "62a7bd70a31da5baf7b6bc23"
+    "description": "Carrito Bar"
 }
 
 
@@ -24,5 +23,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/api/categories/62a7bd70a31da5baf7b6bc23
+DELETE http://localhost:3000/api/categories/62bcf631202c3b45cec5407e
 

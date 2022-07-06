@@ -5,13 +5,12 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "email": "jorgepos@hamgilsdfasdf",
-    "username": "sadfsdaf",
-    "password": "dffdsdf",
-    "firstname": "sdf",
-    "lastname": "Chip",
-    "birthDate": "",
-    "phone": "11125253254"
+    "email": "carloselrey@hotmay",
+    "username": "kingcarlos2",
+    "password": "asdfgsdg",
+    "firstName": "Carlos",
+    "lastName": "Chivita",
+    "phone": "34256345"
 }
 
 

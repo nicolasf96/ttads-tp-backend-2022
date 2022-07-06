@@ -30,6 +30,7 @@ categoryController.getCategory = async (req, res) => {
 //new
 categoryController.createCategory = async (req, res) => {
     let cat = await new Category(req.body);
+    console.log('cat back'+ req)
     await cat.save();
     return res.status(200).json({
         success: true,

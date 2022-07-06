@@ -10,7 +10,7 @@ let storeSchema = new Schema({
     isService: Boolean,
     valoration: Number,
     idCategory: String,
-    idUser: String,
+    user:{type: Schema.Types.ObjectId, ref: 'User'},
     products:[{type: Schema.Types.ObjectId, ref: 'Product'}]
     
 },{
