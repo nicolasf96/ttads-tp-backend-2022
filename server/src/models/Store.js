@@ -9,7 +9,7 @@ let storeSchema = new Schema({
     city: String,
     isService: Boolean,
     valoration: Number,
-    idCategory: String,
+    category:{type: Schema.Types.ObjectId, ref: 'Category'},
     user:{type: Schema.Types.ObjectId, ref: 'User'},
     products:[{type: Schema.Types.ObjectId, ref: 'Product'}]
     
