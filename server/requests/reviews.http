@@ -2,18 +2,21 @@
 GET http://localhost:3000/api/reviews/
 
 ###
-POST http://localhost:3000/api/reviews
+POST http://localhost:3000/api/review
 Content-Type: application/json
 
 {
-    "idStore": "62a750be4635495c180e406e",
-    "comment": "La verdad muy buena la comida 😀",
-    "score": "3"
+    "idStore": "62b3cc2efee506c5c9b6f44d",
+    "comment": "La vida es corta",
+    "score": "4"
 }
 
+###
+GET http://localhost:3000/api/review/62a7941a7fd2e196ec14e16d
 
 ###
-GET http://localhost:3000/api/reviews/62a7941a7fd2e196ec14e16d
+GET http://localhost:3000/api/reviews/62a750be4635495c180e406e
+
 
 
 ###

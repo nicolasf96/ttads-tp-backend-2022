@@ -1,5 +1,6 @@
 const reviewController = {}
 import Review from '../models/Review.js'
+import Store from '../models/Store.js'
 
 
 // curl http://localhost:3000/api/v1/reviews/
@@ -21,6 +22,19 @@ reviewController.getReview = async (req, res) => {
         success: true,
         data: review,
         message: 'Review found',
+    })
+};
+
+
+
+// curl http://localhost:3000/api/v1/products/<id>
+//getOne
+reviewController.getReviewsByStore = async (req, res) => {
+    let reviews = await Review.find().where('idStore').equals(req.params.id)
+    return res.status(200).json({
+        success: true,
+        data: reviews,
+        message: 'Categories list retrieved successfully',
     })
 };
 

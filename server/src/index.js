@@ -4,6 +4,9 @@ import Cors from 'cors'
 import Morgan from 'morgan'
 //import Helmet from 'helmet'
 //import RateLimit from 'express-rate-limit'
+import bodyParser from 'body-parser'
+
+
 
 import dbconnection from './database.js';
 
@@ -21,13 +24,16 @@ app.use(Cors()) // Enable All CORS Requests
 //app.use(Helmet()) // For securing http request headers (later on)
 app.use(Morgan('tiny')) // request logger
 app.use(Express.json()) // JSON parsing (body-parser replacement)
+app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json());
 
 
 app.use('/api/users', routerUser);
 app.use('/api/categories', routerCategory);
 app.use('/api/stores', routerStore);
-app.use('/api/reviews', routerReview);
+app.use('/api', routerReview);
 app.use('/api', routerProduct);
+
 
 
 const port = process.env.PORT || 3000

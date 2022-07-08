@@ -2,18 +2,19 @@ import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
 
 let reviewSchema = new Schema({
-    "idStore": {
+    idStore: {
         type: String,
         required: true
     },
-    "comment": {
+    comment: {
         type: String,
         required: true
     },
-    "score": {
+    score: {
         type: Number,
         required: true
-    }
+    },
+    user: {type: Schema.Types.ObjectId, ref: 'User'}
     
 },{
     timestamps: true,

@@ -29,13 +29,23 @@ userController.getUser = async (req, res) => {
 //curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
 //new
 userController.createUser = async (req, res) => {
-    let user = await new User(req.body);
+    let userTmp = {
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        phone: req.body.phone,
+        profilePicture: req.body.myFile
+
+    }
+    let user = await new User(userTmp);
     await user.save();
     return res.status(200).json({
         success: true,
         data: user,
         message: 'User added successfully',
-    })
+    })  
 };
 
 
