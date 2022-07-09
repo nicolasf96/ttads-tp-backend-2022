@@ -2,11 +2,8 @@ import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
 
 let imageSchema = new Schema({
-	img:
-	{
-		data: Buffer,
-		contentType: String
-	},
+	title: String,
+	path: String,
     idUser: {type: Schema.Types.ObjectId, ref: 'User'}
 },{
     timestamps: true,

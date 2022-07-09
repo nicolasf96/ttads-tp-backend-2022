@@ -1,6 +1,7 @@
 import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
 
+
 let storeSchema = new Schema({
     name: String,
     username: String,

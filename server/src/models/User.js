@@ -12,7 +12,8 @@ let userSchema = new Schema({
     firstName: String,
     lastName: String,
     phone: String,
-    stores:[{type: Schema.Types.ObjectId, ref: 'Store'}]
+    stores:[{type: Schema.Types.ObjectId, ref: 'Store'}],
+    profilePicture: String
     
 },{
     timestamps: true,

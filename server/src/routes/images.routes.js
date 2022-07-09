@@ -1,9 +1,10 @@
 import Router from 'express';
 const router = Router();
-import imagesController from '../controllers/images.controller.js'
+import imagesController from '../controllers/images.controller.js';
+import upload from '../middlewares/upload.js'
 
 
-router.post('/:id', imagesController.createImage);
+router.post('/', upload.single('image') , imagesController.createImage);
 
 
 export default router;

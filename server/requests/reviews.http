@@ -6,8 +6,8 @@ POST http://localhost:3000/api/review
 Content-Type: application/json
 
 {
-    "idStore": "62b3cc2efee506c5c9b6f44d",
-    "comment": "La vida es corta",
+    "idStore": "62a750be4635495c180e406e",
+    "comment": "sdfgdsfgsdsdfg",
     "score": "4"
 }
 
