@@ -29,17 +29,7 @@ userController.getUser = async (req, res) => {
 //curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
 //new
 userController.createUser = async (req, res) => {
-    let userTmp = {
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phone: req.body.phone,
-        profilePicture: req.body.myFile
-
-    }
-    let user = await new User(userTmp);
+    let user = await new User(req.body);
     await user.save();
     return res.status(200).json({
         success: true,
@@ -47,6 +37,31 @@ userController.createUser = async (req, res) => {
         message: 'User added successfully',
     })  
 };
+
+
+userController.createProfilePicture = async (req,res) => {
+    var img = fs.readFileSync(req.file.path);
+    var encode_image = img.toString('base64');
+    // Define a JSONobject for the image attributes for saving to database
+     
+    var finalImg = {
+         contentType: req.file.mimetype,
+         image:  new Buffer(encode_image, 'base64')
+      };
+   db.collection('profilePictures').insertOne(finalImg, (err, result) => {
+       console.log(result)
+    
+       if (err) return console.log(err)
+    
+       console.log('saved to database')
+       return res.status(200).json({
+        success: true,
+        data: user,
+        message: 'User added successfully',
+    })  
+
+    })
+}
 
 
 userController.editUser = async (req,res) => {
