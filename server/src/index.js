@@ -38,7 +38,7 @@ app.use('/api/stores', routerStore);
 app.use('/api', routerReview);
 app.use('/api', routerProduct);
 app.use('/api/images', routerImages);
-app.use('/uploads', Express.static(path.resolve('uploads')))
+app.use('/api/uploads', Express.static(path.resolve('uploads')))
 
 
 
