@@ -4,8 +4,9 @@ const {Schema,model} =Mongoose;
 let productSchema = new Schema({
     title: String,
     description: String,
-    price: Number
-    
+    price: Number,
+    idStore: {type: Schema.Types.ObjectId, ref: 'Store'},
+    image: {type: Schema.Types.ObjectId, ref: 'Image'}
 },{
     timestamps: true,
     versionKey: false

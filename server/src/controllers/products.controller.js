@@ -6,7 +6,7 @@ import Store from '../models/Store.js';
 // curl http://localhost:3000/api/v1/product/
 //getAll
 productController.getProducts = async (req, res) => {
-    let products = await Product.find();
+    let products = await Product.find().populate('image');
     return res.status(200).json({
         success: true,
         data: products,
@@ -17,7 +17,7 @@ productController.getProducts = async (req, res) => {
 // curl http://localhost:3000/api/v1/product/<id>
 //getOne
 productController.getProductById = async (req, res) => {
-    let prod = await Product.findOne({"_id":req.params.id});
+    let prod = await Product.findOne({"_id":req.params.id}).populate('image');
     return res.status(200).json({
         success: true,
         data: prod,
@@ -28,11 +28,11 @@ productController.getProductById = async (req, res) => {
 // curl http://localhost:3000/api/v1/products/<id>
 //getOne
 productController.getProductByStore = async (req, res) => {
-    let store = await Store.findOne({"_id":req.params.id}).populate('products');
-    console.log(store.products);
+    let products = await Product.find().where({"idStore": req.params.id}).populate('image');
+    console.log(products);
     return res.status(200).json({
         success: true,
-        data: store.products,
+        data: products,
         message: 'product found',
     })
 };
@@ -44,7 +44,7 @@ productController.getProductByStore = async (req, res) => {
 productController.createProduct = async (req, res) => {
     let prod = await new Product(req.body);
     await prod.save();
-    let store = await Store.findOne({"_id":req.params.id}).populate('products');
+    let store = await Store.findOne({"_id":req.body.idStore}).populate('products');
     store.products.push(prod);
     await store.save();
     return res.status(200).json({

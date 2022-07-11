@@ -4,7 +4,7 @@ const {Schema,model} =Mongoose;
 let imageSchema = new Schema({
 	title: String,
 	path: String,
-    idUser: {type: Schema.Types.ObjectId, ref: 'User'}
+    idAssociated: String
 },{
     timestamps: true,
     versionKey: false

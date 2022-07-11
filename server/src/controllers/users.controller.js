@@ -5,7 +5,7 @@ import User from '../models/User.js'
 // curl http://localhost:3000/api/v1/user/
 //getAll
 userController.getUsers = async (req, res) => {
-    let users = await User.find();
+    let users = await User.find().populate('profilePicture');
     return res.status(200).json({
         success: true,
         data: users,
@@ -16,7 +16,7 @@ userController.getUsers = async (req, res) => {
 // curl http://localhost:3000/api/v1/client/<id>
 //getOne
 userController.getUser = async (req, res) => {
-    let user = await User.findOne({"_id":req.params.id});
+    let user = await User.findOne({"_id":req.params.id}).populate('profilePicture');
     return res.status(200).json({
         success: true,
         data: user,
@@ -39,29 +39,6 @@ userController.createUser = async (req, res) => {
 };
 
 
-userController.createProfilePicture = async (req,res) => {
-    var img = fs.readFileSync(req.file.path);
-    var encode_image = img.toString('base64');
-    // Define a JSONobject for the image attributes for saving to database
-     
-    var finalImg = {
-         contentType: req.file.mimetype,
-         image:  new Buffer(encode_image, 'base64')
-      };
-   db.collection('profilePictures').insertOne(finalImg, (err, result) => {
-       console.log(result)
-    
-       if (err) return console.log(err)
-    
-       console.log('saved to database')
-       return res.status(200).json({
-        success: true,
-        data: user,
-        message: 'User added successfully',
-    })  
-
-    })
-}
 
 
 userController.editUser = async (req,res) => {

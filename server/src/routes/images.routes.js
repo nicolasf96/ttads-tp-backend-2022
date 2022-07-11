@@ -6,7 +6,8 @@ import upload from '../middlewares/upload.js'
 
 router.get('/', imagesController.getImages);
 router.get('/:id', imagesController.getImage);
-router.post('/', upload.single('image') , imagesController.createImage);
+router.post('/profileUser', upload.single('image') , imagesController.createImageProfileUser);
+router.post('/product', upload.single('image') , imagesController.createImageProduct);
 
 
 export default router;

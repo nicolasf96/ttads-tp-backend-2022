@@ -1,8 +1,9 @@
 const imagesController = {}
+import mongoose from 'mongoose';
 import Image from '../models/Image.js';
-import User from '../models/User.js'
+import User from '../models/User.js';
 import fs from 'fs'
-
+const Product = mongoose.model('Product')
 
 
 //getAll
@@ -29,20 +30,20 @@ imagesController.getImage = async (req, res) => {
 
 
 
-imagesController.createImage = async (req,res) => {
+imagesController.createImageProfileUser = async (req,res) => {
     const { idUser } = req.body;
     let user = await User.findOne({"_id":idUser});
 
     const newImg = {
         title: 'Profile Picture - User: '+user.username,
         path: req.file.path,
-        idUser: idUser
+        idAssociated: idUser
     }
 
     let img = await new Image(newImg);
     await img.save();
 
-    user.profilePicture = req.file.filename;
+    user.profilePicture = img._id;
     await user.save();
 
 
@@ -53,6 +54,32 @@ imagesController.createImage = async (req,res) => {
         success: true,
         data: {
             user,
+            img
+        },
+        message: 'Image added successfully',
+    })  
+}
+
+imagesController.createImageProduct = async (req,res) => {
+    const { idProduct } = req.body;
+    let product = await Product.findOne({"_id":idProduct});
+
+    const newImg = {
+        title: 'Profile Picture - User: '+product.title,
+        path: req.file.path,
+        idAssociated: idProduct
+    }
+
+    let img = await new Image(newImg);
+    await img.save();
+
+    product.image = img._id;
+    await product.save();
+
+    return res.status(200).json({
+        success: true,
+        data: {
+            product,
             img
         },
         message: 'Image added successfully',
