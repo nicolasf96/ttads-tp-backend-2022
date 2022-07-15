@@ -2,6 +2,7 @@ const imagesController = {}
 import mongoose from 'mongoose';
 import Image from '../models/Image.js';
 import User from '../models/User.js';
+import Store from '../models/Store.js';
 import fs from 'fs'
 const Product = mongoose.model('Product')
 
@@ -86,5 +87,35 @@ imagesController.createImageProduct = async (req,res) => {
     })  
 }
 
+
+imagesController.createImageProfileStore = async (req,res) => {
+    const { idStore } = req.body;
+    let store = await Store.findOne({"_id":idStore});
+
+    const newImg = {
+        title: 'Profile Picture - Store: '+store.username,
+        path: req.file.path,
+        idAssociated: idStore
+    }
+
+    let img = await new Image(newImg);
+    await img.save();
+
+    store.profilePicture = img._id;
+    await store.save();
+
+
+    console.log(newImg);
+    console.log(store);
+
+    return res.status(200).json({
+        success: true,
+        data: {
+            store,
+            img
+        },
+        message: 'Image added successfully',
+    })  
+}
 
 export default imagesController;

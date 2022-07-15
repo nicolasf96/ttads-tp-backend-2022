@@ -16,7 +16,7 @@ storeController.getStores = async (req, res) => {
 // curl http://localhost:3000/api/v1/store/<id>
 //getOne
 storeController.getStore = async (req, res) => {
-    let store = await Store.findOne({"_id":req.params.id});
+    let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture');
     return res.status(200).json({
         success: true,
         data: store,
