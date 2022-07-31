@@ -2,6 +2,18 @@ const storeController = {}
 import Store from '../models/Store.js'
 
 
+
+// curl http://localhost:3000/api/v1/stores/
+//getAll
+storeController.getStoresWithImage = async (req, res) => {
+    let stores = await Store.find().populate('profilePicture');
+    return res.status(200).json({
+        success: true,
+        data: stores,
+        message: 'Stores list retrieved successfully',
+    })
+};
+
 // curl http://localhost:3000/api/v1/stores/
 //getAll
 storeController.getStores = async (req, res) => {

@@ -6,7 +6,7 @@ import Store from '../models/Store.js';
 // curl http://localhost:3000/api/v1/product/
 //getAll
 productController.getProducts = async (req, res) => {
-    let products = await Product.find().populate('image');
+    let products = await Product.find().populate('images');
     return res.status(200).json({
         success: true,
         data: products,
@@ -17,18 +17,18 @@ productController.getProducts = async (req, res) => {
 // curl http://localhost:3000/api/v1/product/<id>
 //getOne
 productController.getProductById = async (req, res) => {
-    let prod = await Product.findOne({"_id":req.params.id}).populate('image');
+    let prod = await Product.findOne({"_id":req.params.id}).populate('images');
     return res.status(200).json({
         success: true,
         data: prod,
-        message: 'product found',
+        message: 'product found yes',
     })
 };
 
 // curl http://localhost:3000/api/v1/products/<id>
 //getOne
 productController.getProductByStore = async (req, res) => {
-    let products = await Product.find().where({"idStore": req.params.id}).populate('image');
+    let products = await Product.find().where({"idStore": req.params.id}).populate('images');
     console.log(products);
     return res.status(200).json({
         success: true,
