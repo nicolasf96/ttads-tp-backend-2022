@@ -11,12 +11,14 @@ let storeSchema = new Schema({
     city: String,
     isService: Boolean,
     valoration: Number,
+    joined: Date.now(),
     category:{type: Schema.Types.ObjectId, ref: 'Category'},
     user:{type: Schema.Types.ObjectId, ref: 'User'},
     products:[{type: Schema.Types.ObjectId, ref: 'Product'}],
     reviews:[{type: Schema.Types.ObjectId, ref: 'Review'}],
     profilePicture: {type: Schema.Types.ObjectId, ref: 'Image'},
-    banner: {type: Schema.Types.ObjectId, ref: 'Image'}
+    banner: {type: Schema.Types.ObjectId, ref: 'Image'},
+    images: [{type: Schema.Types.ObjectId, ref: 'Image'}]
     
 },{
     timestamps: true,
