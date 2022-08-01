@@ -24,6 +24,17 @@ userController.getUser = async (req, res) => {
     })
 };
 
+userController.getUserByStore = async (req, res) => {
+    let user = await User.findOne({"_id":req.params.id}).populate('stores');
+    return res.status(200).json({
+        success: true,
+        data: user,
+        message: 'User found',
+    })
+};
+
+
+
 
 
 //curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/

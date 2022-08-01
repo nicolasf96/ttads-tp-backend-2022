@@ -36,6 +36,17 @@ storeController.getStore = async (req, res) => {
     })
 };
 
+storeController.getStoresByKeyword = async (req, res) => {
+    let stores = await Store.find({name: new RegExp(req.params.keyword, 'i') }).populate('profilePicture');
+    console.log(stores);
+    return res.status(200).json({
+        success: true,
+        data: stores,
+        message: 'Stores found',
+    })
+};
+
+
 
 
 //curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
@@ -59,6 +70,9 @@ storeController.editStore = async (req,res) => {
         message: 'Store edited successfully',
     })
 };
+
+
+
 
 
 //curl -X DELETE http://localhost:3000/api/v1/store/<id>
