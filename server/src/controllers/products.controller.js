@@ -17,7 +17,7 @@ productController.getProducts = async (req, res) => {
 // curl http://localhost:3000/api/v1/product/<id>
 //getOne
 productController.getProductById = async (req, res) => {
-    let prod = await Product.findOne({"_id":req.params.id}).populate('images');
+    let prod = await Product.findOne({"_id":req.params.id}).populate('images').populate('store').exec();
     return res.status(200).json({
         success: true,
         data: prod,
@@ -28,7 +28,7 @@ productController.getProductById = async (req, res) => {
 // curl http://localhost:3000/api/v1/products/<id>
 //getOne
 productController.getProductByStore = async (req, res) => {
-    let products = await Product.find().where({"idStore": req.params.id}).populate('images');
+    let products = await Product.find().where({"store": req.params.id}).populate('images').exec();
     console.log(products);
     return res.status(200).json({
         success: true,
@@ -44,13 +44,13 @@ productController.getProductByStore = async (req, res) => {
 productController.createProduct = async (req, res) => {
     let prod = await new Product(req.body);
     await prod.save();
-    let store = await Store.findOne({"_id":req.body.idStore}).populate('products');
+    let store = await Store.findOne(prod.store).populate('products');
     store.products.push(prod);
     await store.save();
     return res.status(200).json({
         success: true,
         data: {
-            store
+            prod
         },
         message: 'product added successfully',
     })

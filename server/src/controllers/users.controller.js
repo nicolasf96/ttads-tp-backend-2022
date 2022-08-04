@@ -25,7 +25,7 @@ userController.getUser = async (req, res) => {
 };
 
 userController.getUserByStore = async (req, res) => {
-    let user = await User.findOne({"_id":req.params.id}).populate('stores');
+    let user = await User.findOne({"store":req.params.id}).populate('profilePicture');
     return res.status(200).json({
         success: true,
         data: user,

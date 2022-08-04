@@ -8,9 +8,9 @@ let productSchema = new Schema({
     used: { type: Boolean, default: false },
     views:{ type: Number, default: 0 },
     price: Number,
-    type: String,
+    unit: String,
     unitOM: String,
-    idStore: {type: Schema.Types.ObjectId, ref: 'Store'},
+    store: {type: Schema.Types.ObjectId, ref: 'Store'},
     images: [{type: Schema.Types.ObjectId, ref: 'Image'}]
 },{
     timestamps: true,

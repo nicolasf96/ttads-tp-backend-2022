@@ -12,7 +12,7 @@ let userSchema = new Schema({
     firstName: String,
     lastName: String,
     phone: String,
-    stores:[{type: Schema.Types.ObjectId, ref: 'Store'}],
+    store:{type: Schema.Types.ObjectId, ref: 'Store'},
     profilePicture: {type: Schema.Types.ObjectId, ref: 'Image'}
     
 },{

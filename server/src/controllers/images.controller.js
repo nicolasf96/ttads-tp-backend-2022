@@ -74,7 +74,7 @@ imagesController.createImageProduct = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    product.image = img._id;
+    product.images.push(img._id);
     await product.save();
 
     return res.status(200).json({
@@ -102,6 +102,67 @@ imagesController.createImageProfileStore = async (req,res) => {
     await img.save();
 
     store.profilePicture = img._id;
+    await store.save();
+
+
+    console.log(newImg);
+    console.log(store);
+
+    return res.status(200).json({
+        success: true,
+        data: {
+            store,
+            img
+        },
+        message: 'Image added successfully',
+    })  
+}
+
+
+imagesController.createImageStore = async (req,res) => {
+    const { idStore } = req.body;
+    let store = await Store.findOne({"_id":idStore});
+
+    const newImg = {
+        title: 'Profile Picture - Store: '+store.username,
+        path: req.file.path,
+        idAssociated: idStore
+    }
+
+    let img = await new Image(newImg);
+    await img.save();
+
+    store.images.push(img._id);
+    await store.save();
+
+
+    console.log(newImg);
+    console.log(store);
+
+    return res.status(200).json({
+        success: true,
+        data: {
+            store,
+            img
+        },
+        message: 'Image added successfully',
+    })  
+}
+
+imagesController.createBannerStore = async (req,res) => {
+    const { idStore } = req.body;
+    let store = await Store.findOne({"_id":idStore});
+
+    const newImg = {
+        title: 'Profile Picture - Store: '+store.username,
+        path: req.file.path,
+        idAssociated: idStore
+    }
+
+    let img = await new Image(newImg);
+    await img.save();
+
+    store.banner = img._id;
     await store.save();
 
 

@@ -45,6 +45,9 @@ reviewController.getReviewsByStore = async (req, res) => {
 reviewController.createReview = async (req, res) => {
     let review = await new Review(req.body);
     await review.save();
+    let store = await Store.findOne({"_id":review.idStore});
+    store.reviews.push(review);
+    await store.save();
     return res.status(200).json({
         success: true,
         data: review,

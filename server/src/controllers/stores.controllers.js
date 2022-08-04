@@ -28,7 +28,9 @@ storeController.getStores = async (req, res) => {
 // curl http://localhost:3000/api/v1/store/<id>
 //getOne
 storeController.getStore = async (req, res) => {
-    let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture');
+    let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
     return res.status(200).json({
         success: true,
         data: store,
@@ -37,7 +39,8 @@ storeController.getStore = async (req, res) => {
 };
 
 storeController.getStoresByKeyword = async (req, res) => {
-    let stores = await Store.find({name: new RegExp(req.params.keyword, 'i') }).populate('profilePicture');
+  //  let stores = await Store.find({name: new RegExp(req.params.keyword, 'i') }).populate('profilePicture');
+  let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]}).populate('profilePicture');
     console.log(stores);
     return res.status(200).json({
         success: true,
@@ -66,7 +69,7 @@ storeController.editStore = async (req,res) => {
     let theStore = await Store.findByIdAndUpdate(req.params.id, req.body);
     return res.status(200).json({
         success: true,
-        data: req.params.body,
+        data: [req.params.body, theStore],
         message: 'Store edited successfully',
     })
 };
