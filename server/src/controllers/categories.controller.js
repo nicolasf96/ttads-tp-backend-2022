@@ -2,8 +2,7 @@ const categoryController = {}
 import Category from '../models/Category.js'
 
 
-// curl http://localhost:3000/api/v1/Category/
-//getAll
+
 categoryController.getCategories = async (req, res) => {
     let categories = await Category.find().populate('idCategoryParent');
     return res.status(200).json({
@@ -13,8 +12,7 @@ categoryController.getCategories = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/client/<id>
-//getOne
+
 categoryController.getCategory = async (req, res) => {
     let cat = await Category.findOne({"_id":req.params.id});
     return res.status(200).json({
@@ -25,9 +23,6 @@ categoryController.getCategory = async (req, res) => {
 };
 
 
-
-//curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
-//new
 categoryController.createCategory = async (req, res) => {
     let cat = await new Category(req.body);
     console.log('cat back'+ req)
@@ -50,7 +45,7 @@ categoryController.editCategory = async (req,res) => {
 }
 
 
-//curl -X DELETE http://localhost:3000/api/v1/client/<id>
+
 categoryController.deleteCategory =  async (req, res) => {
     let catChilds = await Category.find({"idCategoryParent":req.params.id}).exec();
     await catChilds.map(function(cats) {

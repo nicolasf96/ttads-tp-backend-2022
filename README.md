@@ -28,15 +28,14 @@ se incluirán en su perfil de negocio como publicidad y además podrán enviarla
 correo electrónico a los usuarios que hayan valorado su negocio.
 ### ABMC SIMPLE:
 Entidad -> User
-Atributos -> (email, username, password, name, last_name, birth_date, phone)
+Atributos -> (email, username, password, firstname, last_name, phone)
 ### ABMC DEPENDIENTE:
-Entidad -> Store
-Atributos -> (logo, slogan, description, address, city, id_cathegory, id_user)
+Entidad -> Product
+Atributos -> (title, description, location, used, price, unit, unitOM, store, images)
 ### LISTADO SIMPLE:
 Listar todos los negocios publicados en el directorio, mostrando datos importantes.
 ### LISTADO COMPLEJO:
-Listar todos los negocios publicados en el directorio aplicando un filtro según
-categoría.
+Listar todos los negocios publicados en el directorio aplicando un filtro según Keyword que contenga el nombre o en sus tags
 ### DETALLE BÁSICO:
 Mostrar todos los datos referidos a un negocio. Entidades involucradas -> Store,
 User, Cathegory, Image

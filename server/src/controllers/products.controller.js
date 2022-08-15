@@ -3,7 +3,7 @@ import Product from '../models/product.js';
 import Store from '../models/Store.js';
 
 
-// curl http://localhost:3000/api/v1/product/
+
 //getAll
 productController.getProducts = async (req, res) => {
     let products = await Product.find().populate('images');
@@ -14,7 +14,7 @@ productController.getProducts = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/product/<id>
+
 //getOne
 productController.getProductById = async (req, res) => {
     let prod = await Product.findOne({"_id":req.params.id}).populate('images').populate('store').exec();
@@ -25,7 +25,7 @@ productController.getProductById = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/products/<id>
+
 //getOne
 productController.getProductByStore = async (req, res) => {
     let products = await Product.find().where({"store": req.params.id}).populate('images').exec();
@@ -39,7 +39,6 @@ productController.getProductByStore = async (req, res) => {
 
 
 
-//curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/products/
 //new
 productController.createProduct = async (req, res) => {
     let prod = await new Product(req.body);
@@ -67,7 +66,6 @@ productController.editProduct = async (req,res) => {
 }
 
 
-//curl -X DELETE http://localhost:3000/api/v1/products/<id>
 productController.deleteProduct =  async (req, res) => {
     await Product.deleteOne({"_id": req.params.id});
     return res.status(200).json({

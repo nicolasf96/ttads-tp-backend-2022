@@ -2,7 +2,6 @@ const userController = {}
 import User from '../models/User.js'
 
 
-// curl http://localhost:3000/api/v1/user/
 //getAll
 userController.getUsers = async (req, res) => {
     let users = await User.find().populate('profilePicture');
@@ -13,7 +12,6 @@ userController.getUsers = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/client/<id>
 //getOne
 userController.getUser = async (req, res) => {
     let user = await User.findOne({"_id":req.params.id}).populate('profilePicture');
@@ -37,7 +35,6 @@ userController.getUserByStore = async (req, res) => {
 
 
 
-//curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
 //new
 userController.createUser = async (req, res) => {
     let user = await new User(req.body);
@@ -62,7 +59,6 @@ userController.editUser = async (req,res) => {
 }
 
 
-//curl -X DELETE http://localhost:3000/api/v1/client/<id>
 userController.deleteUser =  async (req, res) => {
     await User.deleteOne({"_id": req.params.id});
     return res.status(200).json({

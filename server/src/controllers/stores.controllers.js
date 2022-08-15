@@ -14,7 +14,6 @@ storeController.getStoresWithImage = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/stores/
 //getAll
 storeController.getStores = async (req, res) => {
     let stores = await Store.find().populate('products').populate('user');
@@ -25,7 +24,6 @@ storeController.getStores = async (req, res) => {
     })
 };
 
-// curl http://localhost:3000/api/v1/store/<id>
 //getOne
 storeController.getStore = async (req, res) => {
     let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture').populate('images').
@@ -39,7 +37,6 @@ storeController.getStore = async (req, res) => {
 };
 
 storeController.getStoresByKeyword = async (req, res) => {
-  //  let stores = await Store.find({name: new RegExp(req.params.keyword, 'i') }).populate('profilePicture');
   let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]}).populate('profilePicture');
     console.log(stores);
     return res.status(200).json({
@@ -52,7 +49,6 @@ storeController.getStoresByKeyword = async (req, res) => {
 
 
 
-//curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/client/
 //new
 storeController.createStore = async (req, res) => {
     let store = await new Store(req.body);
@@ -78,7 +74,6 @@ storeController.editStore = async (req,res) => {
 
 
 
-//curl -X DELETE http://localhost:3000/api/v1/store/<id>
 storeController.deleteStore =  async (req, res) => {
     await Store.deleteOne({"_id": req.params.id});
     return res.status(200).json({

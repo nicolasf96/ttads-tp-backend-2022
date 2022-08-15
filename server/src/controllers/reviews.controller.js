@@ -27,7 +27,7 @@ reviewController.getReview = async (req, res) => {
 
 
 
-// curl http://localhost:3000/api/v1/products/<id>
+
 //getOne
 reviewController.getReviewsByStore = async (req, res) => {
     let reviews = await Review.find().where('idStore').equals(req.params.id)
@@ -40,7 +40,6 @@ reviewController.getReviewsByStore = async (req, res) => {
 
 
 
-//curl -X POST -H "Content-Type: application/json" -d '{"firstName": "Juan", "lastName": "Perez", "email": "jp@gmail.com", "address": "undisclosed"}' http://localhost:3000/api/v1/reviews/
 //new
 reviewController.createReview = async (req, res) => {
     let review = await new Review(req.body);
@@ -66,7 +65,6 @@ reviewController.editReview = async (req,res) => {
 }
 
 
-//curl -X DELETE http://localhost:3000/api/v1/reviews/<id>
 reviewController.deleteReview =  async (req, res) => {
     await Review.deleteOne({"_id": req.params.id});
     return res.status(200).json({
