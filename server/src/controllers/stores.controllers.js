@@ -14,9 +14,21 @@ storeController.getStoresWithImage = async (req, res) => {
     })
 };
 
+storeController.getStoresWithLimit = async (req, res) => {
+    let stores = await Store.find().populate('profilePicture').limit(req.params.limit);;
+    return res.status(200).json({
+        success: true,
+        data: stores,
+        message: 'Stores list retrieved successfully',
+    })
+};
+
+
 //getAll
 storeController.getStores = async (req, res) => {
-    let stores = await Store.find().populate('products').populate('user');
+    let stores = await Store.find().populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
     return res.status(200).json({
         success: true,
         data: stores,
@@ -37,8 +49,9 @@ storeController.getStore = async (req, res) => {
 };
 
 storeController.getStoresByKeyword = async (req, res) => {
-  let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]}).populate('profilePicture');
-    console.log(stores);
+  let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]}).populate('profilePicture').populate('images').
+  populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+  exec();
     return res.status(200).json({
         success: true,
         data: stores,

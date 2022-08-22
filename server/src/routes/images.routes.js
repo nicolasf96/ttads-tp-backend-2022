@@ -6,6 +6,7 @@ import upload from '../middlewares/upload.js'
 
 router.get('/', imagesController.getImages);
 router.get('/:id', imagesController.getImage);
+router.delete('/:id', imagesController.deleteImage);
 router.post('/profileUser', upload.single('image') , imagesController.createImageProfileUser);
 router.post('/product', upload.single('image') , imagesController.createImageProduct);
 router.post('/profileStore', upload.single('image') , imagesController.createImageProfileStore);

@@ -6,7 +6,7 @@ import Store from '../models/Store.js';
 
 //getAll
 productController.getProducts = async (req, res) => {
-    let products = await Product.find().populate('images');
+    let products = await Product.find().populate('images').populate('store').exec();
     return res.status(200).json({
         success: true,
         data: products,
@@ -17,7 +17,8 @@ productController.getProducts = async (req, res) => {
 
 //getOne
 productController.getProductById = async (req, res) => {
-    let prod = await Product.findOne({"_id":req.params.id}).populate('images').populate('store').exec();
+    let prod = await Product.findOne({"_id":req.params.id}).populate('images').populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'}]}).exec();
+                                            
     return res.status(200).json({
         success: true,
         data: prod,
@@ -28,7 +29,7 @@ productController.getProductById = async (req, res) => {
 
 //getOne
 productController.getProductByStore = async (req, res) => {
-    let products = await Product.find().where({"store": req.params.id}).populate('images').exec();
+    let products = await Product.find().where({"store": req.params.id}).populate('images').populate('store').exec();
     console.log(products);
     return res.status(200).json({
         success: true,

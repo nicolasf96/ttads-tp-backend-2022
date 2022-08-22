@@ -30,7 +30,8 @@ reviewController.getReview = async (req, res) => {
 
 //getOne
 reviewController.getReviewsByStore = async (req, res) => {
-    let reviews = await Review.find().where('idStore').equals(req.params.id)
+    let reviews = await Review.find().where('idStore').equals(req.params.id).
+    populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
         data: reviews,

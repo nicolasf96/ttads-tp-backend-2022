@@ -33,7 +33,12 @@ imagesController.getImage = async (req, res) => {
 
 imagesController.createImageProfileUser = async (req,res) => {
     const { idUser } = req.body;
-    let user = await User.findOne({"_id":idUser});
+    let user = await User.findOne({"_id":idUser}).populate('profilePicture');
+
+
+    if(user.profilePicture){
+        await Image.findByIdAndRemove({"_id":user.profilePicture._id});
+    }
 
     const newImg = {
         title: 'Profile Picture - User: '+user.username,
@@ -91,6 +96,12 @@ imagesController.createImageProduct = async (req,res) => {
 imagesController.createImageProfileStore = async (req,res) => {
     const { idStore } = req.body;
     let store = await Store.findOne({"_id":idStore});
+
+
+    if(store.profilePicture){
+        await Image.findByIdAndRemove({"_id":store.profilePicture._id});
+    }
+
 
     const newImg = {
         title: 'Profile Picture - Store: '+store.username,
@@ -153,6 +164,10 @@ imagesController.createBannerStore = async (req,res) => {
     const { idStore } = req.body;
     let store = await Store.findOne({"_id":idStore});
 
+    if(store.banner){
+        await Image.findByIdAndRemove({"_id":sotre.banner._id});
+    }
+
     const newImg = {
         title: 'Profile Picture - Store: '+store.username,
         path: req.file.path,
@@ -178,5 +193,16 @@ imagesController.createBannerStore = async (req,res) => {
         message: 'Image added successfully',
     })  
 }
+
+
+imagesController.deleteImage =  async (req, res) => {
+    
+    await Image.deleteOne({"_id": req.params.id});
+    return res.status(200).json({
+        success: true,
+        data: {"_id": req.params.id},
+        message: 'Image removed successfully',
+    })
+};
 
 export default imagesController;

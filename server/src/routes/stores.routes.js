@@ -3,6 +3,7 @@ const router = Router();
 import storeController from '../controllers/stores.controllers.js';
 
 router.get('/', storeController.getStores);
+router.get('/limit/:limit', storeController.getStoresWithLimit);
 router.get('/images/', storeController.getStoresWithImage);
 router.get('/keyword/:keyword', storeController.getStoresByKeyword);
 router.get('/:id', storeController.getStore);
