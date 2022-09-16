@@ -47,6 +47,11 @@ reviewController.createReview = async (req, res) => {
     await review.save();
     let store = await Store.findOne({"_id":review.idStore});
     store.reviews.push(review);
+
+    let prom = (store.valoration + review.score)/2;
+
+    store.valoration = prom;
+
     await store.save();
     return res.status(200).json({
         success: true,

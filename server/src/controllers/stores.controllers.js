@@ -1,5 +1,6 @@
 const storeController = {}
 import Store from '../models/Store.js'
+import User from '../models/User.js'
 
 
 
@@ -64,8 +65,21 @@ storeController.getStoresByKeyword = async (req, res) => {
 
 //new
 storeController.createStore = async (req, res) => {
+
     let store = await new Store(req.body);
+    let userId = store.user
+    let theUser = await User.findOne({"_id":userId});
+
+
+    if(theUser.store){
+        await Store.findByIdAndRemove({"_id":theUser.store._id});
+    }
+
     await store.save();
+
+    theUser.store = store._id;
+    await theUser.save();
+
     return res.status(200).json({
         success: true,
         data: store,
