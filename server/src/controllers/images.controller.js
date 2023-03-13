@@ -165,7 +165,7 @@ imagesController.createBannerStore = async (req,res) => {
     let store = await Store.findOne({"_id":idStore});
 
     if(store.banner){
-        await Image.findByIdAndRemove({"_id":sotre.banner._id});
+        await Image.findByIdAndRemove({"_id":store.banner._id});
     }
 
     const newImg = {
