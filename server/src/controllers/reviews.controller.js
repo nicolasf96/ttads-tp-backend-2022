@@ -30,12 +30,36 @@ reviewController.getReview = async (req, res) => {
 
 //getOne
 reviewController.getReviewsByStore = async (req, res) => {
-    let reviews = await Review.find().where('idStore').equals(req.params.id).
-    populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
+    let reviews = await Review.find().where('store').equals(req.params.id)
+    .populate({path : 'store', match: { _id: req.params.id }, populate : {path : 'profilePicture'}})
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
         data: reviews,
-        message: 'Categories list retrieved successfully',
+        message: 'Reviews list retrieved successfully',
+    })
+};
+
+reviewController.getReviewsByUser = async (req, res) => {
+
+    let reviews = await Review.find().where('user').equals(req.params.id)
+    .populate({path : 'user', match: { _id: req.params.id }, populate : {path : 'profilePicture'}}).exec();
+    return res.status(200).json({
+        success: true,
+        data: reviews,
+        message: 'Reviews list retrieved successfully',
+    })
+};
+
+reviewController.getReviewsByUserAndStore = async (req, res) => {
+
+    let rev = await Review.findOne({ $and: [{ store: req.params.idStore }, { user: req.params.idUser }] })
+    .populate('user').populate('store')
+    .exec();
+    return res.status(200).json({
+        success: true,
+        data: rev,
+        message: 'Review retrieved successfully2',
     })
 };
 
@@ -45,7 +69,7 @@ reviewController.getReviewsByStore = async (req, res) => {
 reviewController.createReview = async (req, res) => {
     let review = await new Review(req.body);
     await review.save();
-    let store = await Store.findOne({"_id":review.idStore});
+    let store = await Store.findOne(review.store);
     store.reviews.push(review);
 
     let prom = (store.valoration + review.score)/2;

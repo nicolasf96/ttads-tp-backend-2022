@@ -2,10 +2,7 @@ import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
 
 let reviewSchema = new Schema({
-    idStore: {
-        type: String,
-        required: true
-    },
+    store: {type: Schema.Types.ObjectId, ref: 'Store'},
     comment: {
         type: String,
         required: true
