@@ -6,7 +6,9 @@ import jwt from 'jsonwebtoken'
 
 //getAll
 userController.getUsers = async (req, res) => {
-    let users = await User.find().populate('profilePicture').populate('store').exec();
+    let users = await User.find().populate('profilePicture')
+    .populate({path : 'store', populate : [{path : 'images'}, {path : 'profilePicture'}, {path: 'banner'}, {path: 'category'}, {path: 'products'}]})
+    .exec();
     return res.status(200).json({
         success: true,
         data: users,
@@ -72,6 +74,7 @@ userController.createUser = async (req, res) => {
                                 success: true,
                                 token,
                                 _id: user._id,
+                                userStore,
                                 message: 'Sign Up Succesfully',})
 
                         }
@@ -132,10 +135,14 @@ userController.loginUser = async (req,res) => {
 
 
 userController.editUser = async (req,res) => {
-    const theUser = await User.findByIdAndUpdate(req.params.id, req.body);
+    const userTmp = await User.findByIdAndUpdate(req.params.id, req.body);
+
+    let user = await User.findOne({"_id":req.params.id}).populate('profilePicture')
+    .populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'},{path : 'images'},{path : 'banner'},{path : 'products', populate : [{path : 'images'}]}]});
+
     return res.status(200).json({
         success: true,
-        data: theUser,
+        data: user,
         message: 'User edited successfully',
     })
 }

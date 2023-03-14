@@ -14,7 +14,7 @@ categoryController.getCategories = async (req, res) => {
 
 
 categoryController.getCategory = async (req, res) => {
-    let cat = await Category.findOne({"_id":req.params.id});
+    let cat = await Category.findOne({"_id":req.params.id}).populate('idCategoryParent');
     return res.status(200).json({
         success: true,
         data: cat,
@@ -25,7 +25,6 @@ categoryController.getCategory = async (req, res) => {
 
 categoryController.createCategory = async (req, res) => {
     let cat = await new Category(req.body);
-    console.log('cat back'+ req)
     await cat.save();
     return res.status(200).json({
         success: true,
@@ -36,10 +35,11 @@ categoryController.createCategory = async (req, res) => {
 
 
 categoryController.editCategory = async (req,res) => {
-    const theCategory = await Category.findByIdAndUpdate(req.params.id, req.body);
+    let theCategory = await Category.findByIdAndUpdate(req.params.id, req.body);
+    let cat = await Category.findOne({"_id":req.params.id}).populate('idCategoryParent');
     return res.status(200).json({
         success: true,
-        data: theCategory,
+        data: cat,
         message: 'Category edited successfully',
     })
 }

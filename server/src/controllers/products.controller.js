@@ -17,11 +17,12 @@ productController.getProducts = async (req, res) => {
 
 //getOne
 productController.getProductById = async (req, res) => {
-    let prod = await Product.findOne({"_id":req.params.id}).populate('images').populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'}]}).exec();
+    let product = await Product.findOne({"_id":req.params.id}).populate('images').populate({path : 'store',
+    populate : [{path : 'profilePicture'},{path : 'category'}]}).exec();
                                             
     return res.status(200).json({
         success: true,
-        data: prod,
+        data: product,
         message: 'product found yes',
     })
 };
@@ -29,8 +30,8 @@ productController.getProductById = async (req, res) => {
 
 //getOne
 productController.getProductByStore = async (req, res) => {
-    let products = await Product.find().where({"store": req.params.id}).populate('images').populate('store').exec();
-    console.log(products);
+    let products = await Product.find().where({"store": req.params.id}).populate('images');
+    // .populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'}]}).exec();
     return res.status(200).json({
         success: true,
         data: products,
@@ -42,15 +43,27 @@ productController.getProductByStore = async (req, res) => {
 
 //new
 productController.createProduct = async (req, res) => {
-    let prod = await new Product(req.body);
-    await prod.save();
-    let store = await Store.findOne(prod.store).populate('products');
-    store.products.push(prod);
-    await store.save();
+    let product = await new Product(req.body);
+    await product.save();
+    
+    //buscamos el Store y le guardo su prod nuevo
+    let storeTmp = await Store.findOne(product.store).populate('products');
+    storeTmp.products.push(product);
+    await storeTmp.save();
+    
+    
+    //Buscamos nuevamente la store actualizada para devolver
+    let store = await Store.findOne(product.store).populate({path : 'products', populate : {path : 'images'}})
+    .populate('category').populate('profilePicture').populate('banner').populate('images')
+    .populate({path : 'user', populate : {path : 'profilePicture'}})
+    .exec();
+
+
     return res.status(200).json({
         success: true,
         data: {
-            prod
+            product,
+            store
         },
         message: 'product added successfully',
     })
@@ -58,10 +71,21 @@ productController.createProduct = async (req, res) => {
 
 
 productController.editProduct = async (req,res) => {
-    const theProduct = await Product.findByIdAndUpdate(req.params.id, req.body);
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body);
+
+
+    let store = await Store.findOne(product.store).populate({path : 'products', populate : {path : 'images'}})
+    .populate('category').populate('profilePicture').populate('banner').populate('images')
+    .populate({path : 'user', populate : {path : 'profilePicture'}})
+    .exec();
+
+
     return res.status(200).json({
         success: true,
-        data: theProduct,
+        data: {
+            product,
+            store
+        },
         message: 'product edited successfully',
     })
 }

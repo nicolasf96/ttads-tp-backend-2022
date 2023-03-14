@@ -6,7 +6,7 @@ import Store from '../models/Store.js'
 // curl http://localhost:3000/api/v1/reviews/
 //getAll
 reviewController.getReviews = async (req, res) => {
-    let reviews = await Review.find();
+    let reviews = await Review.find().populate({path : 'user', populate : {path : 'profilePicture'}});
     return res.status(200).json({
         success: true,
         data: reviews,
@@ -14,10 +14,12 @@ reviewController.getReviews = async (req, res) => {
     })
 };
 
+
+
 // curl http://localhost:3000/api/v1/reviews/<id>
 //getOne
 reviewController.getReview = async (req, res) => {
-    let review = await Review.findOne({"_id":req.params.id});
+    let review = await Review.findOne({"_id":req.params.id}).populate({path : 'user', populate : {path : 'profilePicture'}});
     return res.status(200).json({
         success: true,
         data: review,
@@ -53,12 +55,11 @@ reviewController.getReviewsByUser = async (req, res) => {
 
 reviewController.getReviewsByUserAndStore = async (req, res) => {
 
-    let rev = await Review.findOne({ $and: [{ store: req.params.idStore }, { user: req.params.idUser }] })
-    .populate('user').populate('store')
-    .exec();
+    let review = await Review.findOne({ $and: [{ store: req.params.idStore }, { user: req.params.idUser }] })
+    .populate('store').populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
-        data: rev,
+        data: review,
         message: 'Review retrieved successfully2',
     })
 };
@@ -69,27 +70,35 @@ reviewController.getReviewsByUserAndStore = async (req, res) => {
 reviewController.createReview = async (req, res) => {
     let review = await new Review(req.body);
     await review.save();
-    let store = await Store.findOne(review.store);
-    store.reviews.push(review);
 
-    let prom = (store.valoration + review.score)/2;
+    let storeTmp = await Store.findOne(review.store);
+    storeTmp.reviews.push(review);
 
-    store.valoration = prom;
+    let promedio = (storeTmp.valoration + review.score)/2;
+    storeTmp.valoration = promedio;
+    await storeTmp.save();
 
-    await store.save();
+    let store = await Store.findOne(review.store).populate({path : 'products', populate : {path : 'images'}})
+    .populate('category').populate('profilePicture').populate('banner').populate('images')
+    .populate({path : 'user', populate : {path : 'profilePicture'}})
+    .exec();
+
     return res.status(200).json({
         success: true,
-        data: review,
+        data: {
+            review,
+            store
+        },
         message: 'Review added successfully',
     })
 };
 
 
 reviewController.editReview = async (req,res) => {
-    const theReview = await Review.findByIdAndUpdate(req.params.id, req.body);
+    const review = await Review.findByIdAndUpdate(req.params.id, req.body);
     return res.status(200).json({
         success: true,
-        data: theReview,
+        data: review,
         message: 'Review edited successfully',
     })
 }

@@ -9,7 +9,7 @@ const Product = mongoose.model('Product')
 
 //getAll
 imagesController.getImages = async (req, res) => {
-    let images = await Image.find().populate('idUser');
+    let images = await Image.find().populate('idAssociated');
     return res.status(200).json({
         success: true,
         data: images,
@@ -21,10 +21,10 @@ imagesController.getImages = async (req, res) => {
 
 //getOne
 imagesController.getImage = async (req, res) => {
-    let img = await Image.findOne({"_id":req.params.id});
+    let image = await Image.findOne({"_id":req.params.id}).populate('idAssociated');
     return res.status(200).json({
         success: true,
-        data: img,
+        data: image,
         message: 'Image found',
     })
 };
@@ -33,15 +33,15 @@ imagesController.getImage = async (req, res) => {
 
 imagesController.createImageProfileUser = async (req,res) => {
     const { idUser } = req.body;
-    let user = await User.findOne({"_id":idUser}).populate('profilePicture');
+    let userTmp = await User.findOne({"_id":idUser}).populate('profilePicture');
 
 
-    if(user.profilePicture){
-        await Image.findByIdAndRemove({"_id":user.profilePicture._id});
+    if(userTmp.profilePicture){
+        await Image.findByIdAndRemove({"_id":userTmp.profilePicture._id});
     }
 
     const newImg = {
-        title: 'Profile Picture - User: '+user.username,
+        title: 'Profile Picture of user '+userTmp.username,
         path: req.file.path,
         idAssociated: idUser
     }
@@ -49,12 +49,10 @@ imagesController.createImageProfileUser = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    user.profilePicture = img._id;
-    await user.save();
+    userTmp.profilePicture = img._id;
+    await userTmp.save();
 
-
-    console.log(newImg);
-    console.log(user);
+    let user = await User.findOne({"_id":idUser}).populate('profilePicture').populate('store').exec();
 
     return res.status(200).json({
         success: true,
@@ -68,10 +66,10 @@ imagesController.createImageProfileUser = async (req,res) => {
 
 imagesController.createImageProduct = async (req,res) => {
     const { idProduct } = req.body;
-    let product = await Product.findOne({"_id":idProduct});
+    let productTmp = await Product.findOne({"_id":idProduct});
 
     const newImg = {
-        title: 'Profile Picture - User: '+product.title,
+        title: 'profile Picture of '+productTmp.title,
         path: req.file.path,
         idAssociated: idProduct
     }
@@ -79,8 +77,10 @@ imagesController.createImageProduct = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    product.images.push(img._id);
-    await product.save();
+    productTmp.images.push(img._id);
+    await productTmp.save();
+
+    let product = await Product.findOne({"_id":idProduct}).populate('images');
 
     return res.status(200).json({
         success: true,
@@ -95,16 +95,18 @@ imagesController.createImageProduct = async (req,res) => {
 
 imagesController.createImageProfileStore = async (req,res) => {
     const { idStore } = req.body;
-    let store = await Store.findOne({"_id":idStore});
+    let storeTmp = await Store.findOne({"_id":idStore}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
 
 
-    if(store.profilePicture){
-        await Image.findByIdAndRemove({"_id":store.profilePicture._id});
+    if(storeTmp.profilePicture){
+        await Image.findByIdAndRemove({"_id":storeTmp.profilePicture._id});
     }
 
 
     const newImg = {
-        title: 'Profile Picture - Store: '+store.username,
+        title: 'Profile Picture - Store: '+storeTmp.username,
         path: req.file.path,
         idAssociated: idStore
     }
@@ -112,12 +114,13 @@ imagesController.createImageProfileStore = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    store.profilePicture = img._id;
-    await store.save();
+    storeTmp.profilePicture = img._id;
+    await storeTmp.save();
 
+    let store = await Store.findOne({"_id":idStore}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
 
-    console.log(newImg);
-    console.log(store);
 
     return res.status(200).json({
         success: true,
@@ -132,10 +135,10 @@ imagesController.createImageProfileStore = async (req,res) => {
 
 imagesController.createImageStore = async (req,res) => {
     const { idStore } = req.body;
-    let store = await Store.findOne({"_id":idStore});
+    let storeTmp = await Store.findOne({"_id":idStore});
 
     const newImg = {
-        title: 'Profile Picture - Store: '+store.username,
+        title: 'Profile Picture - Store: '+storeTmp.username,
         path: req.file.path,
         idAssociated: idStore
     }
@@ -143,12 +146,13 @@ imagesController.createImageStore = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    store.images.push(img._id);
-    await store.save();
+    storeTmp.images.push(img._id);
+    await storeTmp.save();
 
+    let store = await Store.findOne({"_id":idStore}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
 
-    console.log(newImg);
-    console.log(store);
 
     return res.status(200).json({
         success: true,
@@ -162,14 +166,16 @@ imagesController.createImageStore = async (req,res) => {
 
 imagesController.createBannerStore = async (req,res) => {
     const { idStore } = req.body;
-    let store = await Store.findOne({"_id":idStore});
+    let storeTmp = await Store.findOne({"_id":idStore}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
 
-    if(store.banner){
-        await Image.findByIdAndRemove({"_id":store.banner._id});
+    if(storeTmp.banner){
+        await Image.findByIdAndRemove({"_id":storeTmp.banner._id});
     }
 
     const newImg = {
-        title: 'Profile Picture - Store: '+store.username,
+        title: 'profile picture of '+storeTmp.username,
         path: req.file.path,
         idAssociated: idStore
     }
@@ -177,19 +183,16 @@ imagesController.createBannerStore = async (req,res) => {
     let img = await new Image(newImg);
     await img.save();
 
-    store.banner = img._id;
-    await store.save();
+    storeTmp.banner = img._id;
+    await storeTmp.save();
 
-
-    console.log(newImg);
-    console.log(store);
+    let store = await Store.findOne({"_id":idStore}).populate('profilePicture').populate('images').
+    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
+    exec();
 
     return res.status(200).json({
         success: true,
-        data: {
-            store,
-            img
-        },
+        data: store,
         message: 'Image added successfully',
     })  
 }

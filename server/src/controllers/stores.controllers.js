@@ -27,9 +27,10 @@ storeController.getStoresWithLimit = async (req, res) => {
 
 //getAll
 storeController.getStores = async (req, res) => {
-    let stores = await Store.find().populate('profilePicture').populate('images').
-    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
-    exec();
+    let stores = await Store.find().populate('profilePicture').populate('images')
+    .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
+
     return res.status(200).json({
         success: true,
         data: stores,
@@ -39,9 +40,9 @@ storeController.getStores = async (req, res) => {
 
 //getOne
 storeController.getStore = async (req, res) => {
-    let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture').populate('images').
-    populate('products').populate('category').populate('banner').populate('reviews').populate('user').
-    exec();
+    let store = await Store.findOne({"_id":req.params.id}).populate('profilePicture').populate('images')
+    .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
         data: store,
@@ -50,9 +51,10 @@ storeController.getStore = async (req, res) => {
 };
 
 storeController.getStoresByKeyword = async (req, res) => {
-  let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]}).populate('profilePicture').populate('images').
-  populate('products').populate('category').populate('banner').populate('reviews').populate('user').
-  exec();
+  let stores = await Store.find( { $or:[ {name: new RegExp(req.params.keyword, 'i') }, {tags: new RegExp(req.params.keyword, 'i') } ]})
+  .populate('profilePicture').populate('images')
+    .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
         data: stores,
@@ -66,19 +68,23 @@ storeController.getStoresByKeyword = async (req, res) => {
 //new
 storeController.createStore = async (req, res) => {
 
-    let store = await new Store(req.body);
-    let userId = store.user
-    let theUser = await User.findOne({"_id":userId});
+    let storeTmp = await new Store(req.body);
+    let userId = storeTmp.user
+    let theUser = await User.findOne({"_id":userId}).populate('store');
 
 
     if(theUser.store){
         await Store.findByIdAndRemove({"_id":theUser.store._id});
     }
 
-    await store.save();
+    await storeTmp.save();
 
-    theUser.store = store._id;
+    theUser.store = storeTmp._id;
     await theUser.save();
+
+    let store = await Store.findOne({"_id":storeTmp._id}).populate('profilePicture').populate('images')
+    .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
 
     return res.status(200).json({
         success: true,
@@ -89,10 +95,18 @@ storeController.createStore = async (req, res) => {
 
 
 storeController.editStore = async (req,res) => {
-    let theStore = await Store.findByIdAndUpdate(req.params.id, req.body);
+    let storeTmp = await Store.findByIdAndUpdate(req.params.id, req.body);
+
+
+    let store = await Store.findOne({"_id":storeTmp._id}).populate('profilePicture').populate('images')
+    .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+    .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
+
     return res.status(200).json({
         success: true,
-        data: [req.params.body, theStore],
+        data: {
+            store
+        },
         message: 'Store edited successfully',
     })
 };
