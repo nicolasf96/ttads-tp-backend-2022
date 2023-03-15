@@ -81,10 +81,12 @@ imagesController.createImageProduct = async (req,res) => {
     await productTmp.save();
 
     let product = await Product.findOne({"_id":idProduct}).populate('images');
+    let products = await Product.find().where({"store": product.store}).populate('images');
 
     return res.status(200).json({
         success: true,
         data: {
+            products,
             product,
             img
         },

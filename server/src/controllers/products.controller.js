@@ -92,10 +92,16 @@ productController.editProduct = async (req,res) => {
 
 
 productController.deleteProduct =  async (req, res) => {
+    let product = await Product.findOne({"_id":req.params.id});
     await Product.deleteOne({"_id": req.params.id});
+    let products = await Product.find().where({"store": product.store}).populate('images');
+
     return res.status(200).json({
         success: true,
-        data: {"_id": req.params.id},
+        data: {
+            "_id": req.params.id,
+            products
+        },
         message: 'product removed successfully',
     })
 };

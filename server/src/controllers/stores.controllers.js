@@ -45,7 +45,10 @@ storeController.getStore = async (req, res) => {
     .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
     return res.status(200).json({
         success: true,
-        data: store,
+        data: {
+            store,
+            "_id": req.params.id
+        },
         message: 'Store found',
     })
 };
