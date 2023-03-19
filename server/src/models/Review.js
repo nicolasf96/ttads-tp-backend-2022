@@ -2,7 +2,7 @@ import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
 
 let reviewSchema = new Schema({
-    store: {type: Schema.Types.ObjectId, ref: 'Store'},
+    store: {type: Schema.Types.ObjectId, ref: 'Store', required: true},
     comment: {
         type: String,
         required: true
@@ -11,7 +11,7 @@ let reviewSchema = new Schema({
         type: Number,
         required: true
     },
-    user: {type: Schema.Types.ObjectId, ref: 'User'}
+    user: {type: Schema.Types.ObjectId, ref: 'User', required: true}
     
 },{
     timestamps: true,

@@ -74,7 +74,15 @@ reviewController.createReview = async (req, res) => {
     let storeTmp = await Store.findOne(review.store);
     storeTmp.reviews.push(review);
 
-    let promedio = (storeTmp.valoration + review.score)/2;
+    let val;
+    let promedio;
+    if(storeTmp.valoration){
+        val= storeTmp.valoration;
+        promedio = (val + review.score)/2;
+    }else{
+        val = 0;
+        promedio = review.score;
+    }
     storeTmp.valoration = promedio;
     await storeTmp.save();
 

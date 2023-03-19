@@ -58,28 +58,38 @@ userController.createUser = async (req, res) => {
             $or: [{email: newUser.email.toLocaleLowerCase()},
                   {username: newUser.username.toLocaleLowerCase()}]
          }).exec((err, users)=>{
-            if(err) return res.status(500).json({ message: "Error al guardar usuario"})
-            if(users && users.length >=1){
-                return res.status(300).json({ message: "El usuario que intentas registrar ya existe!"})
+            if(err) return res.status(500).json({
+                message: "Error al guardar usuario",
+                data: ' Error'
+            })
+            if(users && users.length >=1){ return res.status(300).json({
+                message: "El usuario que intentas registrar ya existe!",
+                data: 'Ya existe'
+            })
             }else{
                 bcrypt.hash(password, 10, async function(err, hash) {
                     newUser.password = hash;
-        
                     await newUser.save((err, userStored)=>{
-                        if(err) return res.status(500).json({ message: "Error al guardar usuario"})
-        
+                        if(err) return res.status(500).json({
+                            message: "Error al guardar usuario",
+                            data: "error al guardar"
+                        });
                         if(userStored) {
                             let token = jwt.sign({'_id' : userStored._id}, 'secretKey')
                             return res.status(200).json({ 
                                 success: true,
                                 token,
-                                _id: user._id,
-                                userStore,
-                                message: 'Sign Up Succesfully',})
+                                _id: newUser._id,
+                                userStored,
+                                message: 'Sign Up Succesfully'
+                            })
 
                         }
                         else{
-                            return res.status(404).json({ message: "No se guardó el usuario"})
+                            return res.status(404).json({ 
+                                message: "No se guardó el usuario",
+                                data: "No se guardo"
+                            })
                         }
                     })
                  })
@@ -91,6 +101,7 @@ userController.createUser = async (req, res) => {
     else{
         return res.status(200).json({
             message: 'Completa todos los campos!',
+            data: 'Completa todos los campos'
         })  
     }
     
