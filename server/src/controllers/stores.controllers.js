@@ -16,7 +16,7 @@ storeController.getStoresWithImage = async (req, res) => {
 };
 
 storeController.getStoresWithLimit = async (req, res) => {
-    let stores = await Store.find().populate('profilePicture').limit(req.params.limit);;
+    let stores = await Store.find().populate('profilePicture').populate('category').limit(req.params.limit);;
     return res.status(200).json({
         success: true,
         data: stores,
