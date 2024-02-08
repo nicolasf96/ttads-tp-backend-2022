@@ -13,7 +13,12 @@ let userSchema = new Schema({
     lastName: String,
     phone: String,
     store:{type: Schema.Types.ObjectId, ref: 'Store'},
-    profilePicture: {type: Schema.Types.ObjectId, ref: 'Image'}
+    profilePicture: {type: Schema.Types.ObjectId, ref: 'Image'},
+    role: {
+        type: String,
+        enum: ['user', 'moderator'], 
+        default: 'user' 
+    }
     
 },{
     timestamps: true,
