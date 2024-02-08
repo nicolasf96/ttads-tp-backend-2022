@@ -2,22 +2,12 @@ import Express from 'express'
 import Mongoose from 'mongoose'
 import Cors from 'cors'
 import Morgan from 'morgan'
-//import Helmet from 'helmet'
-//import RateLimit from 'express-rate-limit'
 import bodyParser from 'body-parser'
 import path from 'path'
 import upload from './middlewares/upload.js'
-
-
-
 import dbconnection from './database.js';
+import router from './routes/index.routes.js';
 
-import routerUser from './routes/user.routes.js'
-import routerCategory from './routes/categories.routes.js'
-import routerStore from './routes/stores.routes.js'
-import routerReview from './routes/reviews.routes.js'
-import routerProduct from './routes/products.routes.js'
-import routerImages from './routes/images.routes.js'
 
 const app = Express();
 
@@ -32,12 +22,7 @@ app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
 
-app.use('/api/users', routerUser);
-app.use('/api/categories', routerCategory);
-app.use('/api/stores', routerStore);
-app.use('/api', routerReview);
-app.use('/api', routerProduct);
-app.use('/api/images', routerImages);
+app.use('/api', router);
 app.use('/api/uploads', Express.static(path.resolve('uploads')))
 
 
