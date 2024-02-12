@@ -60,6 +60,48 @@ storeController.getStoresWithLimit = async (req, res) => {
     }
 };
 
+// *Searching Stores
+// Todo Refactor: Encontrar la manera de buscar filtrando sin tener que traer todas las stores
+storeController.searchStores = async (req, res) => {
+    try {
+        const keyword = req.params.search;
+        const regex = new RegExp(keyword, 'i'); // Expresión regular insensible a mayúsculas y minúsculas
+    
+        // Realizar la búsqueda después de popular los campos
+        let stores = await Store.find({})
+            .populate('profilePicture')
+            .populate('images')
+            .populate({ path: 'products', populate: { path: 'images' } })
+            .populate('category')
+            .populate('banner')
+            .populate('reviews')
+            .populate({ path: 'user', populate: { path: 'profilePicture' } })
+            .lean();
+        
+        // Filtrar los resultados basados en la keyword
+        stores = stores.filter(store => {
+            return store.name.match(regex) ||
+                store.username.match(regex) ||
+                store.description.match(regex) ||
+                (store.category && store.category.description.match(regex));
+        });
+
+        console.log('STORES2: ',stores);
+    
+        return res.status(200).json({
+          success: true,
+          data: stores,
+          message: 'Stores found by keyword',
+        });
+      } catch (error) {
+        console.error('Error searching stores by keyword:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error searching stores by keyword',
+          error: error.message,
+        });
+      }
+};
 
 // * getAll
 storeController.getStores = async (req, res) => {
