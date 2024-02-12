@@ -171,6 +171,7 @@ userController.loginUser = async (req,res) => {
                         success: true,
                         token,
                         _id: user._id,
+                        role: user.role,
                         message: 'Login Succesfully',})
 
                 

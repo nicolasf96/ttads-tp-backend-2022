@@ -36,12 +36,28 @@ storeController.getStoresWithImage = async (req, res) => {
 
 // Todo Refactor: Mejorar el método para traer las mas populares, o las que tengan mayor puntuación
 storeController.getStoresWithLimit = async (req, res) => {
-    let stores = await Store.find().populate('profilePicture').populate('category').limit(req.params.limit);;
-    return res.status(200).json({
-        success: true,
-        data: stores,
-        message: 'Stores list retrieved successfully',
-    })
+    try {
+        const stores = await Store.find().populate('profilePicture').populate('category').sort({ createdAt: -1 }).limit(6);
+        
+        if (!stores || stores.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No stores found',
+            });
+        }
+        
+        return res.status(200).json({
+            success: true,
+            data: stores,
+            message: 'Stores list retrieved successfully',
+        });
+    } catch (error) {
+        console.error('Error fetching stores:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
 };
 
 
