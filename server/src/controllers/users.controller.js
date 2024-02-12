@@ -4,110 +4,224 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 
 
-//getAll
+// * getAll
 userController.getUsers = async (req, res) => {
-    let users = await User.find().populate('profilePicture')
-    .populate({path : 'store', populate : [{path : 'images'}, {path : 'profilePicture'}, {path: 'banner'}, {path: 'category'}, {path: 'products'}]})
-    .exec();
-    return res.status(200).json({
-        success: true,
-        data: users,
-        message: 'users list retrieved successfully',
-    })
+    try {
+        let users = await User.find().populate('profilePicture')
+            .populate({path : 'store', populate : [{path : 'images'}, {path : 'profilePicture'}, {path: 'banner'}, {path: 'category'}, {path: 'products'}]})
+            .exec();
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No users found',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: users,
+            message: 'Users list retrieved successfully',
+        });
+    } catch (error) {
+        console.error('Error getting users:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
 };
 
-//getOne
+// * getOne
 userController.getUser = async (req, res) => {
-    let user = await User.findOne({"_id":req.params.id}).populate('profilePicture')
-    .populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'},{path : 'images'},{path : 'banner'},{path : 'products', populate : [{path : 'images'}]}]});
-    return res.status(200).json({
-        success: true,
-        data: user,
-        message: 'User found',
-    })
+    try {
+        let user = await User.findOne({"_id": req.params.id}).populate('profilePicture')
+            .populate({
+                path: 'store',
+                populate: [
+                    {path: 'profilePicture'},
+                    {path: 'category'},
+                    {path: 'images'},
+                    {path: 'banner'},
+                    {path: 'products', populate: [{path: 'images'}]}
+                ]
+            });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: user,
+            message: 'User found',
+        });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
 };
 
+// * GetUser by Store
 userController.getUserByStore = async (req, res) => {
-    let user = await User.findOne({"store":req.params.id}).populate('profilePicture');
-    return res.status(200).json({
-        success: true,
-        data: user,
-        message: 'User found',
-    })
+    try {
+        let user = await User.findOne({"store": req.params.id}).populate('profilePicture');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found for this store',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: user,
+            message: 'User found',
+        });
+    } catch (error) {
+        console.error('Error fetching user by store:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
 };
-
-
-
-
 
 //new
-userController.createUser = async (req, res) => {
-    let { firstName, lastName, email, password, username, phone } = req.body;
-    let newUser = await new User();
+// userController.createUser = async (req, res) => {
+//     let { firstName, lastName, email, password, username, phone } = req.body;
+//     let newUser = await new User();
 
-    if(firstName && lastName && email && password && username && phone){
-         newUser.firstName = firstName;
-         newUser.lastName = lastName;
-         newUser.email = email;
-         newUser.username = username;
-         newUser.phone = phone;
-         newUser.profilePicture = null;
+//     if(firstName && lastName && email && password && username && phone){
+//          newUser.firstName = firstName;
+//          newUser.lastName = lastName;
+//          newUser.email = email;
+//          newUser.username = username;
+//          newUser.phone = phone;
+//          newUser.profilePicture = null;
 
 
-         User.find({
-            $or: [{email: newUser.email.toLocaleLowerCase()},
-                  {username: newUser.username.toLocaleLowerCase()}]
-         }).exec((err, users)=>{
-            if(err) return res.status(500).json({
-                message: "Error al guardar usuario",
-                data: ' Error'
-            })
-            if(users && users.length >=1){ return res.status(300).json({
-                message: "El usuario que intentas registrar ya existe!",
-                data: 'Ya existe'
-            })
-            }else{
-                bcrypt.hash(password, 10, async function(err, hash) {
-                    newUser.password = hash;
-                    await newUser.save((err, userStored)=>{
-                        if(err) return res.status(500).json({
-                            message: "Error al guardar usuario",
-                            data: "error al guardar"
-                        });
-                        if(userStored) {
-                            let token = jwt.sign({'_id' : userStored._id}, 'secretKey')
-                            return res.status(200).json({ 
-                                success: true,
-                                token,
-                                _id: newUser._id,
-                                userStored,
-                                message: 'Sign Up Succesfully'
-                            })
+//          User.find({
+//             $or: [{email: newUser.email.toLocaleLowerCase()},
+//                   {username: newUser.username.toLocaleLowerCase()}]
+//          }).exec((err, users)=>{
+//             if(err) return res.status(500).json({
+//                 message: "Error al guardar usuario",
+//                 data: ' Error'
+//             })
+//             if(users && users.length >=1){ return res.status(300).json({
+//                 message: "El usuario que intentas registrar ya existe!",
+//                 data: 'Ya existe'
+//             })
+//             }else{
+//                 bcrypt.hash(password, 10, async function(err, hash) {
+//                     newUser.password = hash;
+//                     await newUser.save((err, userStored)=>{
+//                         if(err) return res.status(500).json({
+//                             message: "Error al guardar usuario",
+//                             data: "error al guardar"
+//                         });
+//                         if(userStored) {
+//                             let token = jwt.sign({'_id' : userStored._id}, 'secretKey')
+//                             return res.status(200).json({ 
+//                                 success: true,
+//                                 token,
+//                                 _id: newUser._id,
+//                                 userStored,
+//                                 message: 'Sign Up Succesfully'
+//                             })
 
-                        }
-                        else{
-                            return res.status(404).json({ 
-                                message: "No se guardó el usuario",
-                                data: "No se guardo"
-                            })
-                        }
-                    })
-                 })
-            }
-         });
+//                         }
+//                         else{
+//                             return res.status(404).json({ 
+//                                 message: "No se guardó el usuario",
+//                                 data: "No se guardo"
+//                             })
+//                         }
+//                     })
+//                  })
+//             }
+//          });
 
          
-    }
-    else{
-        return res.status(200).json({
-            message: 'Completa todos los campos!',
-            data: 'Completa todos los campos'
-        })  
-    }
+//     }
+//     else{
+//         return res.status(200).json({
+//             message: 'Completa todos los campos!',
+//             data: 'Completa todos los campos'
+//         })  
+//     }
     
+// };
+
+// * createUser
+userController.createUser = async (req, res) => {
+    try {
+        let { firstName, lastName, email, password, username, phone } = req.body;
+
+        if (firstName && lastName && email && password && username && phone) {
+            let existingUser = await User.findOne({
+                $or: [
+                    { email: email.toLowerCase() },
+                    { username: username.toLowerCase() }
+                ]
+            });
+
+            if (existingUser) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'El usuario que intentas registrar ya existe',
+                });
+            }
+
+            const newUser = new User({
+                firstName,
+                lastName,
+                email: email.toLowerCase(),
+                password,
+                username: username.toLowerCase(),
+                phone,
+                profilePicture: null
+            });
+
+            bcrypt.hash(password, 10, async function (err, hash) {
+                newUser.password = hash;
+                await newUser.save();
+
+                let token = jwt.sign({ '_id': newUser._id }, 'secretKey');
+
+                return res.status(201).json({
+                    success: true,
+                    token,
+                    _id: newUser._id,
+                    userStored: newUser,
+                    message: 'Registro exitoso',
+                });
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Completa todos los campos',
+            });
+        }
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+        });
+    }
 };
 
 
+// * Login
 userController.loginUser = async (req,res) => {
     let params = req.body;
     let username = params.username;
@@ -129,7 +243,7 @@ userController.loginUser = async (req,res) => {
 
                 
             }else{
-                return res.status(404).json({ message: "Usuario y/o contraseña incorrectos"})
+                return res.status(401).json({ message: "Usuario y/o contraseña incorrectos"})
             }
         }
         else{
@@ -144,29 +258,72 @@ userController.loginUser = async (req,res) => {
 
 
 
+// * Edit User
+userController.editUser = async (req, res) => {
+    try {
+        const userTmp = await User.findByIdAndUpdate(req.params.id, req.body);
 
-userController.editUser = async (req,res) => {
-    const userTmp = await User.findByIdAndUpdate(req.params.id, req.body);
+        const user = await User.findOne({ "_id": req.params.id }).populate('profilePicture')
+            .populate({
+                path: 'store',
+                populate: [
+                    { path: 'profilePicture' },
+                    { path: 'category' },
+                    { path: 'images' },
+                    { path: 'banner' },
+                    { path: 'products', populate: [{ path: 'images' }] }
+                ]
+            });
 
-    let user = await User.findOne({"_id":req.params.id}).populate('profilePicture')
-    .populate({path : 'store', populate : [{path : 'profilePicture'},{path : 'category'},{path : 'images'},{path : 'banner'},{path : 'products', populate : [{path : 'images'}]}]});
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado',
+            });
+        }
 
-    return res.status(200).json({
-        success: true,
-        data: user,
-        message: 'User edited successfully',
-    })
-}
-
-
-userController.deleteUser =  async (req, res) => {
-    await User.deleteOne({"_id": req.params.id});
-    return res.status(200).json({
-        success: true,
-        data: {"_id": req.params.id},
-        message: 'User removed successfully',
-    })
+        return res.status(200).json({
+            success: true,
+            data: user,
+            message: 'Usuario editado exitosamente',
+        });
+    } catch (error) {
+        console.error('Error editing user:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+        });
+    }
 };
+
+
+
+// * Delete User
+userController.deleteUser = async (req, res) => {
+    try {
+        const deletedUser = await User.deleteOne({ "_id": req.params.id });
+
+        if (deletedUser.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado',
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: { "_id": req.params.id },
+            message: 'Usuario eliminado exitosamente',
+        });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+        });
+    }
+};
+
 
 export default userController;
 

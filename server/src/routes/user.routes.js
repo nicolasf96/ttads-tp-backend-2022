@@ -9,7 +9,8 @@ import jwt from 'jsonwebtoken'
 router.get('/', verifyToken, userController.getUsers);
 router.get('/:id', userController.getUser);
 router.post('/login', userController.loginUser);
-router.get('/store/:id', userController.getUserByStore);
+// Todo Refactor : /store/:id/user  
+router.get('/store/:id/user', userController.getUserByStore);
 router.post('/signup',  userController.createUser);
 router.put('/:id', userController.editUser);
 router.delete('/:id', userController.deleteUser);
