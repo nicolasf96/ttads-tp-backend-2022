@@ -94,74 +94,7 @@ userController.getUserByStore = async (req, res) => {
     }
 };
 
-//new
-// userController.createUser = async (req, res) => {
-//     let { firstName, lastName, email, password, username, phone } = req.body;
-//     let newUser = await new User();
-
-//     if(firstName && lastName && email && password && username && phone){
-//          newUser.firstName = firstName;
-//          newUser.lastName = lastName;
-//          newUser.email = email;
-//          newUser.username = username;
-//          newUser.phone = phone;
-//          newUser.profilePicture = null;
-
-
-//          User.find({
-//             $or: [{email: newUser.email.toLocaleLowerCase()},
-//                   {username: newUser.username.toLocaleLowerCase()}]
-//          }).exec((err, users)=>{
-//             if(err) return res.status(500).json({
-//                 message: "Error al guardar usuario",
-//                 data: ' Error'
-//             })
-//             if(users && users.length >=1){ return res.status(300).json({
-//                 message: "El usuario que intentas registrar ya existe!",
-//                 data: 'Ya existe'
-//             })
-//             }else{
-//                 bcrypt.hash(password, 10, async function(err, hash) {
-//                     newUser.password = hash;
-//                     await newUser.save((err, userStored)=>{
-//                         if(err) return res.status(500).json({
-//                             message: "Error al guardar usuario",
-//                             data: "error al guardar"
-//                         });
-//                         if(userStored) {
-//                             let token = jwt.sign({'_id' : userStored._id}, 'secretKey')
-//                             return res.status(200).json({ 
-//                                 success: true,
-//                                 token,
-//                                 _id: newUser._id,
-//                                 userStored,
-//                                 message: 'Sign Up Succesfully'
-//                             })
-
-//                         }
-//                         else{
-//                             return res.status(404).json({ 
-//                                 message: "No se guardó el usuario",
-//                                 data: "No se guardo"
-//                             })
-//                         }
-//                     })
-//                  })
-//             }
-//          });
-
-         
-//     }
-//     else{
-//         return res.status(200).json({
-//             message: 'Completa todos los campos!',
-//             data: 'Completa todos los campos'
-//         })  
-//     }
-    
-// };
-
-// * createUser
+// * createUser (registro)
 userController.createUser = async (req, res) => {
     try {
         let { firstName, lastName, email, password, username, phone } = req.body;
@@ -220,7 +153,6 @@ userController.createUser = async (req, res) => {
     }
 };
 
-
 // * Login
 userController.loginUser = async (req,res) => {
     let params = req.body;
@@ -255,8 +187,6 @@ userController.loginUser = async (req,res) => {
 
 
 }
-
-
 
 // * Edit User
 userController.editUser = async (req, res) => {
@@ -295,8 +225,6 @@ userController.editUser = async (req, res) => {
         });
     }
 };
-
-
 
 // * Delete User
 userController.deleteUser = async (req, res) => {

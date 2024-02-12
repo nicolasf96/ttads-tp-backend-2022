@@ -53,7 +53,15 @@ productController.getProductById = async (req, res) => {
 // * getProductByStore
 productController.getProductByStore = async (req, res) => {
     try {
-        let products = await Product.find({ "store": req.params.id }).populate('images');
+        let products = await Product.find().where({"store": req.params.id}).populate('images').exec();
+        
+        if(!products){
+            return res.status(404).json({
+                success: false,
+                message: 'products not found',
+                data: null
+            });
+        }
 
         return res.status(200).json({
             success: true,

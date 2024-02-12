@@ -84,19 +84,21 @@ storeController.getStore = async (req, res) => {
         if(!store){
             return res.status(404).json({
                 success: false,
+                data: null,
                 message: 'No store found'
             });
         }
 
         return res.status(200).json({
             success: true,
-            message: 'Store retrieved successfully',
-            data: store
+            data: store,
+            message: 'Store retrieved successfully'
         });
         
     } catch (error) {
         return res.status(500).json({
             success: false,
+            data: null,
             message: 'Internal server error',
         });
     }
