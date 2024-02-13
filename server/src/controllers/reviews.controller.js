@@ -187,6 +187,17 @@ reviewController.editReview = async (req, res) => {
             });
         }
 
+        // Recalcular el valor de valoration después de editar el review
+        let storeTmp = await Store.findOne(review.store);
+        let reviews = await Review.find({ store: review.store });
+        let val = 0;
+        for (let rev of reviews) {
+            val += rev.score;
+        }
+        let promedio = val / reviews.length;
+        storeTmp.valoration = promedio;
+        await storeTmp.save();
+
         return res.status(200).json({
             success: true,
             data: review,
@@ -212,6 +223,17 @@ reviewController.deleteReview = async (req, res) => {
                 message: 'Review not found',
             });
         }
+
+        // Recalcular el valor de valoration después de eliminar el review
+        let storeTmp = await Store.findOne(review.store);
+        let reviews = await Review.find({ store: review.store });
+        let val = 0;
+        for (let rev of reviews) {
+            val += rev.score;
+        }
+        let promedio = val / reviews.length;
+        storeTmp.valoration = promedio;
+        await storeTmp.save();
 
         return res.status(200).json({
             success: true,
