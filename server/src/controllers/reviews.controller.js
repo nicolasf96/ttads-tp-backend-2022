@@ -1,6 +1,10 @@
 const reviewController = {}
 import Review from '../models/Review.js'
 import Store from '../models/Store.js'
+import { moderarWithRetry } from '../moderation_api.js';
+
+
+const rechazaPost = 40;
 
 
 // curl http://localhost:3000/api/v1/reviews/
@@ -143,9 +147,15 @@ reviewController.getReviewsByUserAndStore = async (req, res) => {
 // * create Review
 reviewController.createReview = async (req, res) => {
     try {
-        let review = await new Review(req.body).save();
+        const moderacionRespuesta = await moderarWithRetry(req.body.comment, 10);
+        
+        if (moderacionRespuesta.apropiado < rechazaPost) {
+            return res.status(400).send("Texto rechazado por moderación automática");
+        }
 
-        let storeTmp = await Store.findOne(review.store);
+        const review = await new Review(req.body).save();
+
+        const storeTmp = await Store.findOne(review.store);
         storeTmp.reviews.push(review);
 
         let val = storeTmp.valoration || 0;
@@ -153,7 +163,7 @@ reviewController.createReview = async (req, res) => {
         storeTmp.valoration = promedio;
         await storeTmp.save();
 
-        let store = await Store.findOne(review.store)
+        const store = await Store.findOne(review.store)
             .populate({ path: 'products', populate: { path: 'images' } })
             .populate('category').populate('profilePicture').populate('banner').populate('images')
             .populate({ path: 'user', populate: { path: 'profilePicture' } }).exec();
@@ -170,10 +180,11 @@ reviewController.createReview = async (req, res) => {
         console.error('Error creating review:', error);
         return res.status(500).json({
             success: false,
-            message: 'Internal server error',
+            message: 'Internal server error 2',
         });
     }
 };
+
 
 // * editReview
 reviewController.editReview = async (req, res) => {
@@ -225,8 +236,8 @@ reviewController.deleteReview = async (req, res) => {
         }
 
         // Recalcular el valor de valoration después de eliminar el review
-        let storeTmp = await Store.findOne(review.store);
-        let reviews = await Review.find({ store: review.store });
+        let storeTmp = await Store.findOne(deletedReview.store);
+        let reviews = await Review.find({ store: deletedReview.store });
         let val = 0;
         for (let rev of reviews) {
             val += rev.score;
