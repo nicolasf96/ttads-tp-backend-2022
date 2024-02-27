@@ -85,8 +85,6 @@ storeController.searchStores = async (req, res) => {
                 store.description.match(regex) ||
                 (store.category && store.category.description.match(regex));
         });
-
-        console.log('STORES2: ',stores);
     
         return res.status(200).json({
           success: true,
