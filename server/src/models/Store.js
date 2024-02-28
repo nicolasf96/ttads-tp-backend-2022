@@ -33,6 +33,23 @@ let storeSchema = new Schema({
     versionKey: false
 });
 
+storeSchema.pre('remove', async function() {
+    try {
+        const Product = Mongoose.model('Product')
+        const Review = Mongoose.model('Review')
+        const Image = Mongoose.model('Image')
+
+        await Product.deleteMany({ store: this._id });
+        await Review.deleteMany({ store: this._id });
+        await Image.deleteMany({ idAssociated: this._id});
+    } catch (error) {
+        // Manejar errores
+        console.error('Error al borrar dependencias:', error);
+        next(error);
+    }
+});
+
+
 let Store = model('Store', storeSchema);
 
-export default Store = Store;
+export default Store;

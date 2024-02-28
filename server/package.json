@@ -5,6 +5,7 @@
   "description": "TP Backend para materia TTADS 2022 - UTN FRRo",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev",
     "dev": "nodemon src/index.js"
   },
   "repository": {

@@ -275,16 +275,19 @@ imagesController.createBannerStore = async (req, res) => {
 //  * delete Imagen
 imagesController.deleteImage = async (req, res) => {
     try {
-        const image = await Image.findById(req.params.id);
-        
-        if (!image) {
-            return res.status(404).json({
-                success: false,
-                message: 'Image not found',
-            });
-        }
 
-        await image.remove();
+
+        Image.findById(req.params.id, async function(err,i){
+            if(err){
+                return res.status(404).json({
+                    success: false,
+                    message: 'Imagen no encontrada',
+                });
+
+            }else{
+                i.remove();
+            }
+        });
         
         return res.status(200).json({
             success: true,

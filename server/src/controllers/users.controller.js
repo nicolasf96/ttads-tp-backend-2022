@@ -230,14 +230,18 @@ userController.editUser = async (req, res) => {
 // * Delete User
 userController.deleteUser = async (req, res) => {
     try {
-        const deletedUser = await User.deleteOne({ "_id": req.params.id });
 
-        if (deletedUser.deletedCount === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Usuario no encontrado',
-            });
-        }
+        User.findById(req.params.id, async function(err,u){
+            if(err){
+                return res.status(404).json({
+                    success: false,
+                    message: 'Usuario no encontrado',
+                });
+            }else{
+                u.remove()
+            }
+        });
+
 
         return res.status(200).json({
             success: true,

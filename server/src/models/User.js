@@ -25,6 +25,23 @@ let userSchema = new Schema({
     versionKey: false
 });
 
+
+userSchema.pre('remove', async function() {
+    try {
+        const Store = Mongoose.model('Store')
+        const Image = Mongoose.model('Image')
+
+        await Store.deleteOne({ user: this._id });
+        await Image.deleteMany({ idAssociated: this._id});
+    } catch (error) {
+        // Manejar errores
+        console.error('Error al borrar dependencias:', error);
+        next(error);
+    }
+});
+
+
+
 let User = model('User',userSchema);
 
 export default User = User;

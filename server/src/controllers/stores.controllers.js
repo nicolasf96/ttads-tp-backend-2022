@@ -1,6 +1,10 @@
 const storeController = {}
 import Store from '../models/Store.js'
 import User from '../models/User.js'
+import Mongoose from 'mongoose';
+
+
+
 
 
 
@@ -263,14 +267,17 @@ storeController.editStore = async (req, res) => {
 //  * Delete Store
 storeController.deleteStore = async (req, res) => {
     try {
-        const deletedStore = await Store.deleteOne({ "_id": req.params.id });
 
-        if (deletedStore.deletedCount === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Store not found',
-            });
-        }
+        Store.findById(req.params.id, async function(err,s){
+            if(err){
+                return res.status(404).json({
+                    success: false,
+                    message: 'Tienda no encontrada',
+                });
+            }else{
+                s.remove()
+            }
+        });
 
         return res.status(200).json({
             success: true,
