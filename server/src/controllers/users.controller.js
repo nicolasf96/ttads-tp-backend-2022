@@ -110,7 +110,7 @@ userController.createUser = async (req, res) => {
             if (existingUser) {
                 return res.status(409).json({
                     success: false,
-                    message: 'El usuario que intentas registrar ya existe',
+                    message: 'Username o Email existente',
                 });
             }
 
@@ -192,20 +192,7 @@ userController.loginUser = async (req,res) => {
 // * Edit User
 userController.editUser = async (req, res) => {
     try {
-        const userTmp = await User.findByIdAndUpdate(req.params.id, req.body);
-
-        const user = await User.findOne({ "_id": req.params.id }).populate('profilePicture')
-            .populate({
-                path: 'store',
-                populate: [
-                    { path: 'profilePicture' },
-                    { path: 'category' },
-                    { path: 'images' },
-                    { path: 'banner' },
-                    { path: 'products', populate: [{ path: 'images' }] }
-                ]
-            });
-
+        const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -213,9 +200,28 @@ userController.editUser = async (req, res) => {
             });
         }
 
+        // Verificar si el email o el username ya están en uso
+        const users = await User.find({
+            $or: [{ email: req.body.email }, { username: req.body.username }],
+            _id: { $ne: req.params.id } // Excluir al usuario actual
+        });
+        if (users.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'El username o email que quieres utilizar ya se encuentra registrado',
+            });
+        }
+
+        // Actualizar el usuario
+        await User.findByIdAndUpdate(req.params.id, req.body);
+
+        let edited = await User.findById(req.params.id).populate('profilePicture')
+
+
+        // Enviar respuesta
         return res.status(200).json({
             success: true,
-            data: user,
+            data: edited,
             message: 'Usuario editado exitosamente',
         });
     } catch (error) {

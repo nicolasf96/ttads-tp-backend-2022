@@ -203,12 +203,24 @@ storeController.getStoresByKeyword = async (req, res) => {
 // * new Store
 storeController.createStore = async (req, res) => {
     try {
+
         let storeTmp = new Store(req.body);
         let userId = storeTmp.user;
         let theUser = await User.findOne({ "_id": userId }).populate('store');
 
         if (theUser.store) {
             await Store.findByIdAndRemove({ "_id": theUser.store._id });
+        }
+
+        // Verificar si el email o el username ya están en uso
+        const stores = await Store.find({
+            $or: [{ username: req.body.username }]
+        });
+        if (stores.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'El username de la tienda ya se encuentra registrado',
+            });
         }
 
         await storeTmp.save();
@@ -237,16 +249,28 @@ storeController.createStore = async (req, res) => {
 // * edit Store
 storeController.editStore = async (req, res) => {
     try {
-        let storeTmp = await Store.findByIdAndUpdate(req.params.id, req.body);
 
+        let storeTmp = await Store.findById(req.params.id);
         if (!storeTmp) {
             return res.status(404).json({
                 success: false,
                 message: 'Store not found',
             });
         }
-
-        let store = await Store.findOne({ "_id": storeTmp._id }).populate('profilePicture').populate('images')
+        // Verificar si el email o el username ya están en uso
+        const stores = await Store.find({
+            $or: [{ username: req.body.username }]
+        });
+        if (stores.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'El username de la tienda ya se encuentra registrado',
+            });
+        }
+        
+        await Store.findByIdAndUpdate(req.params.id, req.body);
+        
+        let store = await Store.findById(req.params.id).populate('profilePicture').populate('images')
             .populate({ path: 'products', populate: { path: 'images' } }).populate('category').populate('banner').populate('reviews')
             .populate({ path: 'user', populate: { path: 'profilePicture' } }).exec();
 
