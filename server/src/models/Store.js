@@ -1,5 +1,6 @@
 import Mongoose from 'mongoose';
 const {Schema,model} =Mongoose;
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 
 let storeSchema = new Schema({
@@ -49,6 +50,8 @@ storeSchema.pre('remove', async function() {
     }
 });
 
+
+storeSchema.plugin(mongoosePaginate);
 
 let Store = model('Store', storeSchema);
 

@@ -1,7 +1,9 @@
 const storeController = {}
 import Store from '../models/Store.js'
+import Category from '../models/Category.js'
 import User from '../models/User.js'
 import Mongoose from 'mongoose';
+import paginationParseParams from '../resources/index.js'
 
 
 
@@ -108,9 +110,59 @@ storeController.searchStores = async (req, res) => {
 // * getAll
 storeController.getStores = async (req, res) => {
     try{
-        let stores = await Store.find().populate('profilePicture').populate('images')
-        .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
-        .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
+        let options = {
+            sort: { date: -1 },
+            populate: [{
+                path: 'profilePicture'
+            },
+            {
+                path: 'images'
+            },
+            {
+                path: 'products',
+                populate: {
+                    path: 'images'
+                }
+            },
+            {
+                path: 'category'
+            },
+            {
+                path: 'banner'
+            },
+            {
+                path: 'reviews'
+            },
+            {
+                path: 'user',
+                populate: {
+                    path: 'profilePicture'
+                }
+            },],
+            page: 1,
+            limit: 12,
+          };
+        const { query = {}} = req;
+        const { limit , page } = paginationParseParams(query);
+        const { busqueda = '' } = req.query; 
+
+        if(limit){
+            options.limit = limit;
+        }
+        if(page){
+            options.page = page; 
+        }
+
+        const stores = await Store.paginate({ 
+            $or: [ 
+                { name: { $regex: new RegExp(busqueda, "i") } },
+                { description: { $regex: new RegExp(busqueda, "i") } }
+            ]
+        }, options);
+
+        // let stores = await Store.find().populate('profilePicture').populate('images')
+        // .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
+        // .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
 
         if(!stores || stores.lenght === 0){
             return res.status(404).json({
