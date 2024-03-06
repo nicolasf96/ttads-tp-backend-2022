@@ -11,7 +11,6 @@ let storeSchema = new Schema({
     city: String,
     website: String,
     isService: Boolean,
-    valoration: Number,
     telephone: Number,
     joined: {
         type: Date,
@@ -27,7 +26,8 @@ let storeSchema = new Schema({
     reviews:[{type: Schema.Types.ObjectId, ref: 'Review'}],
     profilePicture: {type: Schema.Types.ObjectId, ref: 'Image'},
     banner: {type: Schema.Types.ObjectId, ref: 'Image'},
-    images: [{type: Schema.Types.ObjectId, ref: 'Image'}]
+    images: [{type: Schema.Types.ObjectId, ref: 'Image'}],
+    blocked:{type: Boolean, default: false }
     
 },{
     timestamps: true,
