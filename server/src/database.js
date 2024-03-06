@@ -1,6 +1,10 @@
 import Mongoose from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config()
 
- const dbconnection =  Mongoose.connect("mongodb://127.0.0.1:27017/ttads-tp-backend-2022", {
+
+const database_url = process.env.DATABASE_URL
+ const dbconnection =  Mongoose.connect(process.env.DATABASE_URL, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
     })

@@ -7,7 +7,8 @@ import path from 'path'
 import upload from './middlewares/upload.js'
 import dbconnection from './database.js';
 import router from './routes/index.routes.js';
-
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = Express();
 
@@ -30,4 +31,6 @@ app.use('/api/uploads', Express.static(path.resolve('uploads')))
 
 
 const port = process.env.PORT || 3000
+console.log(process.env.PORT);
+
 app.listen(port, () => console.log(`listening on port ${port}`))
