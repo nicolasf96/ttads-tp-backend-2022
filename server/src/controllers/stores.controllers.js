@@ -79,7 +79,7 @@ storeController.getStores = async (req, res) => {
           };
         const { query = {}} = req;
         const { limit , page } = paginationParseParams(query);
-        const { busqueda = '' } = req.query; 
+        const { busqueda = '', categoriaID = '' } = req.query;
 
         if(limit){
             options.limit = limit;
@@ -88,23 +88,40 @@ storeController.getStores = async (req, res) => {
             options.page = page; 
         }
 
-        const stores = await Store.paginate({ 
-            $and: [
-                {
-                    $or: [
-                        { name: { $regex: new RegExp(busqueda, "i") } },
-                        { description: { $regex: new RegExp(busqueda, "i") } }
-                    ]
-                },
-                {
-                    blocked: { $ne: true }
-                }
-            ]
-        }, options);
+        let match
+        if(!categoriaID){
+            match = { 
+                $and: [
+                    {
+                        $or: [
+                            { name: { $regex: new RegExp(busqueda, "i") } },
+                            { description: { $regex: new RegExp(busqueda, "i") } }
+                        ]
+                    },
+                    {
+                        blocked: { $ne: true }
+                    }
+                ]
+            }
 
-        // let stores = await Store.find().populate('profilePicture').populate('images')
-        // .populate({path : 'products', populate : {path : 'images'}}).populate('category').populate('banner').populate('reviews')
-        // .populate({path : 'user', populate : {path : 'profilePicture'}}).exec();
+        }else{
+            match = {
+                $and: [
+                  {
+                    $or: [
+                      { name: { $regex: new RegExp(busqueda, "i") } },
+                      { description: { $regex: new RegExp(busqueda, "i") } }
+                    ]
+                  },
+                  { category: categoriaID }, // Agrega la búsqueda por categoría aquí
+                  { blocked: { $ne: true } }
+                ]
+              }
+            
+        }
+        
+        const stores = await Store.paginate(match, options);
+
 
         if(!stores || stores.lenght === 0){
             return res.status(404).json({
