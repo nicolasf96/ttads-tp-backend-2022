@@ -4,9 +4,9 @@ import Cors from 'cors'
 // import Morgan from 'morgan'
 import bodyParser from 'body-parser'
 import path from 'path'
-import upload from './middlewares/upload.js'
-import dbconnection from './database.js';
-import router from './routes/index.routes.js';
+import upload from './src/middlewares/upload.js'
+import dbconnection from './src/database.js';
+import router from './src/routes/index.routes.js';
 import dotenv from 'dotenv'
 dotenv.config()
 
