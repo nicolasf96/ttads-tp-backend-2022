@@ -23,7 +23,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
-
+app.get('/', (req, res) => {
+    res.send('¡Hola Mundo!');
+  });
 app.use('/api', router);
 app.use('/api/uploads', Express.static(path.resolve('uploads')))
 
