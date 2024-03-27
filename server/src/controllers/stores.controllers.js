@@ -230,7 +230,6 @@ storeController.createStore = async (req, res) => {
 // * edit Store
 storeController.editStore = async (req, res) => {
     try {
-        console.log(req.body);
         let storeTmp = await Store.findById(req.params.id);
         if (!storeTmp) {
             return res.status(404).json({
@@ -243,7 +242,6 @@ storeController.editStore = async (req, res) => {
             $or: [{ username: req.body.username }],
             _id: { $ne: req.params.id } // Excluir la tienda actual
         });
-        console.log('STORES:',stores);
 
         if (stores.length > 0) {
             return res.status(409).json({

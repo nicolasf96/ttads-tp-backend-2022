@@ -27,7 +27,7 @@ function verifyToken(req,res, next){
     }
 
     const payload = jwt.verify(token, 'secretKey')
-    console.log(payload)
+    // console.log(payload)
 
     req.userId = payload._id;
     next()
