@@ -35,11 +35,12 @@ Atributos -> (title, description, location, used, price, unit, unitOM, store, im
 ### LISTADO SIMPLE:
 Listar todos los negocios publicados en el directorio, mostrando datos importantes.
 ### LISTADO COMPLEJO:
-Listar todos los negocios publicados en el directorio aplicando un filtro según Keyword que contenga el nombre o en sus tags
+Listar todos los negocios publicados en el directorio aplicando un filtro según Keyword que contenga el nombre o en su descripción
 ### DETALLE BÁSICO:
 Mostrar todos los datos referidos a un negocio. Entidades involucradas -> Store,
 User, Cathegory, Image
 
 
-Diagrama Entidad Realción - DER: tp backend der ttads.pdf
-https://drive.google.com/file/d/1A7xhPxWpqQle38Tq_vT0nWGemIFfXnib/view?usp=sharing
+DER LISTING WEB APP
+https://drive.google.com/file/d/1y7QGX0TQH6Die4coBdKDiTTM1kNVi_sT/view?usp=sharing
+
