@@ -10,13 +10,7 @@ let storeSchema = new Schema({
     address:String,
     city: String,
     website: String,
-    isService: Boolean,
     telephone: Number,
-    joined: {
-        type: Date,
-        default: Date.now
-    },
-    tags: [ String ],
     instagram:{type: String, default: null },
     twitter:{type: String, default: null },
     facebook:{type: String, default: null },
