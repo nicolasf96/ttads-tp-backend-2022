@@ -4,9 +4,9 @@ import Cors from 'cors'
 // import Morgan from 'morgan'
 import bodyParser from 'body-parser'
 import path from 'path'
-import upload from './middlewares/upload.js'
-import dbconnection from './database.js';
-import router from './routes/index.routes.js';
+import upload from './src/middlewares/upload.js'
+import dbconnection from './src/database.js';
+import router from './src/routes/index.routes.js';
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -35,5 +35,3 @@ app.use('/api/uploads', Express.static(path.resolve('uploads')))
 const port = process.env.PORT || 3000
 
 app.listen(port, () => console.log(`listening on port ${port}`))
-
-export default app;

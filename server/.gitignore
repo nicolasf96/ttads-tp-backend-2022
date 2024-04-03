@@ -105,3 +105,4 @@ dist
 
 # Carpeta de archivos
 uploads/
+.vercel
