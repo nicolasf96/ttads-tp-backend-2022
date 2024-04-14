@@ -4,7 +4,7 @@ import Store from '../models/Store.js'
 import { moderarWithRetry } from '../moderation_api.js';
 
 
-const rechazaPost = 40;
+const rechazaPost = 30;
 
 
 // curl http://localhost:3000/api/v1/reviews/
@@ -149,7 +149,7 @@ reviewController.createReview = async (req, res) => {
     try {
         const moderacionRespuesta = await moderarWithRetry(req.body.comment, 10);
         
-        if (moderacionRespuesta.apropiado < rechazaPost) {
+        if (moderacionRespuesta.apropiado <= rechazaPost) {
             return res.status(400).send("Texto rechazado por moderación automática");
         }
 
@@ -189,6 +189,11 @@ reviewController.createReview = async (req, res) => {
 // * editReview
 reviewController.editReview = async (req, res) => {
     try {
+        const moderacionRespuesta = await moderarWithRetry(req.body.comment, 10);
+        if (moderacionRespuesta.apropiado <= rechazaPost) {
+            return res.status(400).send("Texto rechazado por moderación automática");
+        }      
+
         const review = await Review.findByIdAndUpdate(req.params.id, req.body);
 
         if (!review) {
